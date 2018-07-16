@@ -12,7 +12,7 @@ script:
     -p 8080:80                                         \
     --name mobile-icon                                 \
     jabaridash/mobile-icon
-  - sleep 15
+  - sleep 5
   - docker ps -a
   - npm test
   - docker push jabaridash/mobile-icon
