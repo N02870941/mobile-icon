@@ -7,7 +7,7 @@
     "doc": "docs"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "curl localhost:8080"
   },
   "author": "Jabari Dash",
   "license": "MIT",
