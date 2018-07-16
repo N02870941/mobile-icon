@@ -1,4 +1,3 @@
-
 const path    = require('path');
 const express = require('express');
 const multer  = require('multer');
@@ -9,11 +8,18 @@ const port    = process.env.PORT || process.argv[2] || 80;
 const app     = express();
 const storage =   multer.diskStorage({
 
-  destination: function (req, file, callback) {
+  // http://www.riptutorial.com/node-js/example/14210/single-file-upload-using-multer
 
+  destination: (req, file, callback) => {
+
+    console.log("Checking to see if upload directory exists");
+
+    // Check if the directory exists
     if (!fs.existsSync('./uploads')) {
 
-      fs.mkdir('./uploads', function(err) {
+      console.log('Upload directory does not exist, creating it now');
+
+      fs.mkdir('./uploads', (err) => {
 
           if (err) {
 
@@ -22,17 +28,24 @@ const storage =   multer.diskStorage({
 
               callback(null, './uploads');
           }
-      })
+      });
+
+    // Directory already there
+    } else {
+
+      console.log('Upload directory already exists');
     }
 
   },
 
-  filename: function (req, file, callback) {
+  filename: (req, file, callback) => {
 
     callback(null, 'icon.png');
   }
+
 });
 
+// Create routes
 //------------------------------------------------------------------------------
 
 app.post('/upload', ingress);
