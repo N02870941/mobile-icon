@@ -58,7 +58,7 @@ create_icons() {
   convert "${img}" -resize 40x40    -quality 100 "${ios_dir}/icon-20x2pt.png"
   convert "${img}" -resize 60x60    -quality 100 "${ios_dir}/icon-20x3pt.png"
 
-  convert "${img}" -resize 29x20    -quality 100 "${ios_dir}/icon-29x1pt.png"
+  convert "${img}" -resize 29x29    -quality 100 "${ios_dir}/icon-29x1pt.png"
   convert "${img}" -resize 58x58    -quality 100 "${ios_dir}/icon-29x2pt.png"
   convert "${img}" -resize 87x87    -quality 100 "${ios_dir}/icon-29x3pt.png"
 
