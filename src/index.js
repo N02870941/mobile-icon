@@ -6,7 +6,7 @@ const fs      = require('fs');
 const exec    = util.promisify(require('child_process').exec);
 const port    = process.env.PORT || process.argv[2] || 80;
 const app     = express();
-const storage =   multer.diskStorage({
+const storage = multer.diskStorage({
 
   // http://www.riptutorial.com/node-js/example/14210/single-file-upload-using-multer
 
@@ -24,9 +24,6 @@ const storage =   multer.diskStorage({
           if (err) {
 
               console.log(err.stack);
-          } else {
-
-              callback(null, './uploads');
           }
       });
 
@@ -36,6 +33,7 @@ const storage =   multer.diskStorage({
       console.log('Upload directory already exists');
     }
 
+    callback(null, './uploads');
   },
 
   filename: (req, file, callback) => {
