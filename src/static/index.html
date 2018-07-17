@@ -1,36 +1,68 @@
 <html>
   <head>
-    <script type="text/javascript" src="script.js"></script>
-    <link href="style.css">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link type="text/css" rel="stylesheet" href="style.css">
+
   </head>
 
   <body>
 
-    <div id="header">
-      <h1 id="title">Mobile Icon</h1>
+    <!-- Bootstrap container -->
+    <div id='container' class='container'>
+
+      <!-- Header row  -->
+      <div class='row'>
+        <div class="col-sm">
+          <h1 id="title">Mobile Icon</h1>
+        </div>
+      </div>
+
+      <!-- Main content row -->
+      <div class='row'>
+        <div class="col-sm">
+
+          <!-- Short description -->
+          <p id="description-paragraph" class="paragraph">
+            Upload a file and a zip file of the exported icons will be returned.
+          </p>
+
+          <!-- Form to upload file -->
+          <form id="form" action="/upload" enctype="multipart/form-data" method="post">
+
+              <!-- <div class="form-group"> -->
+
+                <label style="display:block;">
+                    <input type="file" name="file" accept="image/*" class="btn btn-outline-info">
+                </label>
+
+                <label style="display:block;">
+                  <input type="submit" value="Upload" class="btn btn-primary">
+                </label>
+              <!-- </div> -->
+
+            </form>
+        </div>
+      </div>
+
+      <!-- Footer row -->
+      <div class='row'>
+        <div class="col-sm">
+          <p id="author-paragraph" class="paragraph">
+            By Jabari Dash, code found on <a class="link" href="" target="_blank">GitHub.</a>
+          </p>
+        </div>
+      </div>
+
     </div>
 
-    <div id="content">
-
-      <!-- Short description -->
-      <p id="description-paragraph" class="paragraph">
-        Upload a file and a zip file of the exported icons will be returned.
-      </p>
-
-      <!-- Form to upload file -->
-      <form id="form" action="/upload" enctype="multipart/form-data" method="post">
-          <input type="file" name="file" accept="image/*">
-          <input type="submit" value="Upload">
-        </form>
-    </div>
-
-    <div id="footer">
-
-      <!-- Info about author and link to code on github -->
-      <p id="author-paragraph" class="paragraph">
-        By Jabari Dash, code found on <a class="link" href="" target="_blank">GitHub.</a>
-      </p>
-    </div>
-
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="script.js"></script>
   </body>
 </html>
