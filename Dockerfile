@@ -5,8 +5,7 @@ COPY package.json /app
 
 WORKDIR /app
 
-# Install imagemagic via apt-get
-
+RUN apt-get update && apt-get -y install imagemagick zip
 RUN npm install
 
 EXPOSE 80
