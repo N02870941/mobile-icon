@@ -1,11 +1,8 @@
 const path    = require('path');
-const express = require('express');
 const multer  = require('multer');
 const util    = require('util');
 const fs      = require('fs');
 const exec    = util.promisify(require('child_process').exec);
-const port    = process.env.PORT || process.argv[2] || 80;
-const app     = express();
 const storage = multer.diskStorage({
 
   // http://www.riptutorial.com/node-js/example/14210/single-file-upload-using-multer
@@ -43,14 +40,12 @@ const storage = multer.diskStorage({
 
 });
 
-// Create routes
 //------------------------------------------------------------------------------
 
-app.post('/upload', ingress);
-app.use('/', express.static(path.join(__dirname, 'static')));
-
-//------------------------------------------------------------------------------
-
+/**
+ * Runs the scripts that modify
+ * the uploaded image
+ */
 async function modify(req, res, next) {
 
   try {
@@ -95,7 +90,10 @@ async function modify(req, res, next) {
 
 //------------------------------------------------------------------------------
 
-function ingress(req, res, next) {
+/**
+ * Entry point function for /upload endpoint
+ */
+function upload(req, res, next) {
 
   console.log("Recieve new post request, proceeding to upload phase");
 
@@ -122,6 +120,17 @@ function ingress(req, res, next) {
 
 //------------------------------------------------------------------------------
 
-console.log(`Listening on port ${port}`);
+/**
+ * Global exception handler
+ * for any internal errors
+ */
+async function exception(req, res, next) {
 
-app.listen(port);
+}
+
+//------------------------------------------------------------------------------
+
+module.exports = {
+
+  upload : upload
+};

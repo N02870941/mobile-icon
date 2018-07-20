@@ -75,7 +75,7 @@ create_icons() {
   convert "${img}" -resize 167x167   -quality 100 "${ios_dir}/icon-83.5x2pt.png"
   convert "${img}" -resize 1024x1024 -quality 100 "${ios_dir}/icon-1024x1pt.png"
 
-  # TODO - Populate ./ios
+  # TODO - Populate ./android
 
   # Zip the output directory
   zip_dir ${dir} ${dir}.zip

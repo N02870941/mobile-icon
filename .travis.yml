@@ -3,14 +3,19 @@ sudo: required
 services:
   - docker
 
+# Sign into docker
+# Build the image
+# Run in
+# Test it
+# Push it
 script:
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
   - docker build -t jabaridash/mobile-icon .
   - |
-    docker run                                         \
-    -d                                                 \
-    -p 8080:80                                         \
-    --name mobile-icon                                 \
+    docker run             \
+    -d                     \
+    -p 8080:80             \
+    --name mobile-icon     \
     jabaridash/mobile-icon
   - sleep 5
   - docker ps -a
