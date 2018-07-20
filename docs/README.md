@@ -46,8 +46,9 @@ curl localhost:8080
 
 ## `/upload`
 
-This requires an `HTTP - POST` and a file that is submitted. This is done by
-the form, or can be done programmatically.
+This requires an `HTTP - POST` and an image file as the body. This is endpoints
+that is used by the form in the `index.html`, or the service can be used directly
+from the REST endpoint (programmatically).
 
 ```
 curl POST etc

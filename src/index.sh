@@ -23,7 +23,7 @@ create_dir() {
 # Zips a folder
 zip_dir() {
 
-  local in=$1; shift
+  local in=$1;  shift
   local out=$1; shift
 
   zip -r ${out} ${in} 2>&1 1>/dev/null
@@ -80,6 +80,7 @@ create_icons() {
   # Zip the output directory
   zip_dir ${dir} ${dir}.zip
 
+  # Print output dir to stdout
   echo "${dir}.zip"
 
   # Clean up temp files
