@@ -1,5 +1,3 @@
-(function () {
-
-  // TODO - Code here if necessary
-
-})();
+function goHome() {
+  
+}

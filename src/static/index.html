@@ -32,18 +32,15 @@
           <!-- Form to upload file -->
           <form id="form" action="/upload" enctype="multipart/form-data" method="post">
 
-              <!-- <div class="form-group"> -->
+            <label style="display:block;">
+              <input type="file" name="file" accept="image/*" class="btn btn-outline-info">
+            </label>
 
-                <label style="display:block;">
-                    <input type="file" name="file" accept="image/*" class="btn btn-outline-info">
-                </label>
+            <label style="display:block;">
+              <input type="submit" value="Upload" class="btn btn-primary">
+            </label>
 
-                <label style="display:block;">
-                  <input type="submit" value="Upload" class="btn btn-primary">
-                </label>
-              <!-- </div> -->
-
-            </form>
+          </form>
         </div>
       </div>
 

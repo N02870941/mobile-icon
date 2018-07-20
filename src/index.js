@@ -4,7 +4,6 @@ const util    = require('util');
 const fs      = require('fs');
 const service = require('./service');
 const storage = require('./storage');
-const exec    = util.promisify(require('child_process').exec);
 const upload  = multer(storage).single('file');
 
 //------------------------------------------------------------------------------
@@ -15,18 +14,24 @@ const upload  = multer(storage).single('file');
  */
 async function ingress(req, res, next) {
 
-  // Delete old files
-  await exec('rm -rf uploads icon.zip');
-
   console.log("Recieved new post request, proceeding to upload phase");
+
+  await service.cleanup();
 
   upload(req, res, async (err) => {
 
-    console.log('Upload complete');
+    console.log('Upload complete, checking if successful');
 
     if (err) {
 
-        return res.end("Error uploading file.");
+      console.log('Upload unsuccessful, sending error to client');
+
+      let body = {
+
+        message : "Could not upload file"
+      };
+
+      res.status(500).json(body);
 
     } else {
 
@@ -34,7 +39,9 @@ async function ingress(req, res, next) {
 
       try {
 
-        await service.modify('./uploads/icon.png', './icon' (zip) => {
+        await service.modify('./uploads/icon.png', './icon', (zip) => {
+
+          console.log('Sending zip file back to client');
 
           res.download('icon.zip', path.join(__dirname, zip), async (error) => {
 
@@ -48,7 +55,7 @@ async function ingress(req, res, next) {
               console.log("Zip file successfully sent back to client");
             }
 
-            await exec('rm -rf uploads icon.zip');
+            await service.cleanup();
           });
 
         });
@@ -70,18 +77,7 @@ async function ingress(req, res, next) {
 
 //------------------------------------------------------------------------------
 
-/**
- * Global exception handler
- * for any internal errors
- */
-async function exception(req, res, next) {
-
-  // TODO - Implement global exception handler
-}
-
-//------------------------------------------------------------------------------
-
 module.exports = {
 
-  ingress : ingress
+  ingress
 };
