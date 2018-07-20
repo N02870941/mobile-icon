@@ -34,7 +34,7 @@ async function ingress(req, res, next) {
 
       try {
 
-        await service.modify( (zip) => {
+        await service.modify('./uploads/icon.png', './icon' (zip) => {
 
           res.download('icon.zip', path.join(__dirname, zip), async (error) => {
 

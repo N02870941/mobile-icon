@@ -7,14 +7,11 @@ const exec = util.promisify(require('child_process').exec);
  * Runs the scripts that modify
  * the uploaded image
  */
-async function modify(callback) {
+async function modify(in_file, out_dir, callback) {
 
   // TODO - Edit image using NPM package instead
 
   console.log("Executing imagemagick shell script");
-
-  const in_file = "./uploads/icon.png";
-  const out_dir = "./icon";
 
   const {stdout, stderr} =  await exec(`./index.sh ${in_file} ${out_dir}`);
   const zip              = removeNewLine(stdout);
