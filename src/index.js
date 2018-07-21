@@ -7,7 +7,6 @@ const service = require('./service');
 const storage = require('./storage');
 const upload  = util.promisify(multer(storage).single('file'));
 
-
 //------------------------------------------------------------------------------
 
 /**

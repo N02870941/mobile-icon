@@ -2,7 +2,7 @@
   "name": "mobile-icon",
   "version": "1.0.0",
   "description": "Creates mobile app icons from uploaded image",
-  "main": "app.js",
+  "main": "index.js",
   "directories": {
     "doc": "docs"
   },
