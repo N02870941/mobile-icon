@@ -3,6 +3,10 @@ const exec = util.promisify(require('child_process').exec);
 
 //------------------------------------------------------------------------------
 
+/**
+ * Deletes temporary files
+ * used at runtime.
+ */
 async function cleanup() {
 
   console.log('Deleting temporary files');
@@ -17,9 +21,9 @@ async function cleanup() {
 
 /**
  * Runs the scripts that modify
- * the uploaded image
+ * the uploaded image.
  */
-async function modify(in_file, out_dir, callback) {
+async function modify(in_file, out_dir) {
 
   // TODO - Edit image using NPM package instead
   // https://github.com/EyalAr/lwip
@@ -31,7 +35,7 @@ async function modify(in_file, out_dir, callback) {
 
   console.log("Zipping complete");
 
-  callback(zip);
+  return zip;
 }
 
 //------------------------------------------------------------------------------

@@ -1,3 +1,5 @@
-function goHome() {
-  
-}
+// Manipulate DOM once ready
+$(() => {
+
+
+});
