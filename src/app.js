@@ -7,7 +7,7 @@ const app          = express();
 //------------------------------------------------------------------------------
 
 /**
- * Creaate routes and
+ * Create routes and
  * listen for HTTP requests
  * on the specified port.
  */

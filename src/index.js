@@ -74,7 +74,7 @@ function upload_failed(error, res) {
   } else if (error instanceof errors.InvalidFileError) {
 
     body.message = "Invalid file type. Please ensure the file is " +
-                   "of one of the following types: ";
+                   "of one of the following types: " + mimes;
     code = 406;
 
   } else {
