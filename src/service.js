@@ -1,5 +1,6 @@
-const util = require('util');
-const exec = util.promisify(require('child_process').exec);
+const util  = require('util');
+const shell = require('shelljs');
+const exec  = util.promisify(require('child_process').exec);
 
 //------------------------------------------------------------------------------
 
@@ -20,19 +21,17 @@ function removeExtension(filename) {
  */
 async function cleanup() {
 
-  let files = "";
+  let files = [];
 
   for (let i = 0; i < arguments.length; i++) {
 
-      files += arguments[i] + ' ';
+      files.push(arguments[i]);
   }
-
-  files += 'uploads'
 
   console.log('Deleting temporary files: ' + files);
 
   // Delete old files
-  await exec(`rm -rf ${files}`);
+  shell.rm('-rf', files);
 
   console.log('Cleanup complete');
 }
@@ -50,7 +49,7 @@ async function modify(in_file, out_dir) {
 
   console.log("Executing imagemagick shell script");
 
-  const {stdout, stderr} = await exec(`./index.sh ${in_file} ${out_dir}`);
+  const {stdout, stderr} = await exec(`./index.sh \"${in_file}\" \"${out_dir}\"`);
   const zip              = removeNewLine(stdout);
 
   console.log("Script complete");

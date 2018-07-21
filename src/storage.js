@@ -4,6 +4,7 @@ const multer  = require('multer');
 const crypto  = require('crypto');
 const service = require('./service');
 const path    = require('path');
+const shell   = require('shelljs');
 const exec    = util.promisify(require('child_process').exec);
 const storage = multer.diskStorage({
 
@@ -15,33 +16,24 @@ const storage = multer.diskStorage({
     let ext   = path.extname(file.originalname);
     let date  = Date.now();
     let token = crypto.randomBytes(16).toString('hex');
-    let dir   = path.join(__dirname, [name, date, token].join('-'));
-
-    console.log(dir);
+    let dir   = path.join(__dirname, 'uploads', token);
 
     console.log("Checking to see if upload directory exists");
 
     // Check if the directory exists
-    if (!fs.existsSync('./uploads')) {
+    if (!fs.existsSync(dir)) {
 
       console.log('Upload directory does not exist, creating it now');
 
-      fs.mkdir('./uploads', (err) => {
-
-          if (err) {
-
-              console.log(err.stack);
-          }
-      });
+      shell.mkdir('-p', dir);
 
     // Directory already there
     } else {
 
       console.log('Upload directory already exists');
-
     }
 
-    callback(null, './uploads');
+    callback(null, dir);
   },
 
   // Keep the original file name

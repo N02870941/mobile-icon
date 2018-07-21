@@ -20,7 +20,7 @@ const mimes   = [
  * when the result file is
  * being sent back to the client.
  */
-async function download_callback(zip_name, out_dir, error) {
+async function download_callback(zip_name, dest, out_dir, error) {
 
   try {
 
@@ -34,7 +34,7 @@ async function download_callback(zip_name, out_dir, error) {
       console.log("Zip file successfully sent back to client");
     }
 
-    await service.cleanup(zip_name, out_dir);
+    await service.cleanup(zip_name, dest, out_dir);
 
   } catch (e) {
 
@@ -100,8 +100,8 @@ async function edit_icon(file, res) {
 
     let e        = undefined;
     let out_name = 'icon'
-    let zip_name = path.join(__dirname, `${out_name}.zip`);
-    let out_dir  = path.join(__dirname, out_name);
+    let zip_name = path.join(`${out_name}.zip`);
+    let out_dir  = path.join(out_name);
 
     // Make sure a file
     // was actually uploaded
@@ -135,7 +135,7 @@ async function edit_icon(file, res) {
 
     res.download(zip_name, path.join(__dirname, zip), (error) => {
 
-      download_callback(zip_name, out_dir, error);
+      download_callback(zip_name, file.destination, out_dir, error);
     });
 
   } catch(error) {
@@ -155,6 +155,8 @@ async function ingress(req, res) {
   try {
 
     console.log("Recieved new post request, uploading file");
+
+    // TODO - check MIMETYPE before saving file
 
     await upload(req, res);
     await edit_icon(req.file, res);

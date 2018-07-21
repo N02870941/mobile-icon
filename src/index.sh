@@ -4,17 +4,17 @@ set -e
 readonly script_dir="$( dirname "${BASH_SOURCE[0]}" )"
 
 # Change working directory to that of this script
-cd ${script_dir}
+cd "${script_dir}"
 
 #-------------------------------------------------------------------------------
 
 # Makes a new folder if it
 # does not already exist
 create_dir() {
-  local dir=$1; shift
+  local dir="${1}"; shift
 
-  if [ ! -d ${dir} ]; then
-    mkdir -p ${dir}
+  if [ ! -d "${dir}" ]; then
+    mkdir -p "${dir}"
   fi
 }
 
@@ -23,10 +23,10 @@ create_dir() {
 # Zips a folder
 zip_dir() {
 
-  local in=$1;  shift
-  local out=$1; shift
+  local in="${1}";  shift
+  local out="${1}"; shift
 
-  zip -r ${out} ${in} 2>&1 1>/dev/null
+  zip -r "${out}" "${in}" 2>&1 1>/dev/null
 }
 
 #-------------------------------------------------------------------------------
@@ -36,8 +36,8 @@ zip_dir() {
 create_icons() {
 
   # Function arguments
-  local readonly img=$1; shift
-  local readonly dir=$1; shift
+  local readonly img="${1}"; shift
+  local readonly dir="${1}"; shift
   local readonly ext=".png"
 
   # Output directories
@@ -46,13 +46,13 @@ create_icons() {
   local readonly original_dir=${dir}/original
 
   # Create output directories
-  create_dir ${dir}
-  create_dir ${ios_dir}
-  create_dir ${android_dir}
-  create_dir ${original_dir}
+  create_dir "${dir}"
+  create_dir "${ios_dir}"
+  create_dir "${android_dir}"
+  create_dir "${original_dir}"
 
   # Copy original into output dir
-  cp ${img} ${original_dir}
+  cp "${img}" "${original_dir}"
 
   # Populate ./ios
   convert "${img}" -resize 20x20    -quality 100 "${ios_dir}/icon-20x1pt${ext}"
@@ -79,13 +79,13 @@ create_icons() {
   # TODO - Populate ./android
 
   # Zip the output directory
-  zip_dir ${dir} ${dir}.zip
+  zip_dir "${dir}" "${dir}.zip"
 
   # Print output dir to stdout
   echo "${dir}.zip"
 
   # Clean up temp files
-  rm -rf ${dir}
+  rm -rf "${dir}"
 }
 
 #-------------------------------------------------------------------------------
@@ -93,16 +93,16 @@ create_icons() {
 # Main function
 main() {
 
-  local img=$1; shift
-  local dir=$1; shift
+  local img="${1}"; shift
+  local dir="${1}"; shift
 
   # TODO - Process arguments
 
-  create_icons ${img} ${dir}
+  create_icons "${img}" "${dir}"
 }
 
 #-------------------------------------------------------------------------------
 
 # Execute main
 # function
-main ${@}
+main "${@}"
