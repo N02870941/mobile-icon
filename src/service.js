@@ -4,15 +4,35 @@ const exec = util.promisify(require('child_process').exec);
 //------------------------------------------------------------------------------
 
 /**
+ * Removes the extension
+ * and returns just a filename.
+ */
+function removeExtension(filename) {
+
+  return filename.split('.').slice(0, -1).join('.');
+}
+
+//------------------------------------------------------------------------------
+
+/**
  * Deletes temporary files
  * used at runtime.
  */
 async function cleanup() {
 
-  console.log('Deleting temporary files');
+  let files = "";
+
+  for (let i = 0; i < arguments.length; i++) {
+
+      files += arguments[i] + ' ';
+  }
+
+  files += 'uploads'
+
+  console.log('Deleting temporary files: ' + files);
 
   // Delete old files
-  await exec('rm -rf uploads icon.zip');
+  await exec(`rm -rf ${files}`);
 
   console.log('Cleanup complete');
 }
@@ -33,7 +53,7 @@ async function modify(in_file, out_dir) {
   const {stdout, stderr} = await exec(`./index.sh ${in_file} ${out_dir}`);
   const zip              = removeNewLine(stdout);
 
-  console.log("Zipping complete");
+  console.log("Script complete");
 
   return zip;
 }
@@ -54,5 +74,6 @@ function removeNewLine(string) {
 module.exports = {
 
   modify,
-  cleanup
+  cleanup,
+  removeExtension
 };

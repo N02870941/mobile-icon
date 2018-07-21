@@ -38,6 +38,7 @@ create_icons() {
   # Function arguments
   local readonly img=$1; shift
   local readonly dir=$1; shift
+  local readonly ext=".png"
 
   # Output directories
   local readonly ios_dir=${dir}/ios
@@ -54,26 +55,26 @@ create_icons() {
   cp ${img} ${original_dir}
 
   # Populate ./ios
-  convert "${img}" -resize 20x20    -quality 100 "${ios_dir}/icon-20x1pt.png"
-  convert "${img}" -resize 40x40    -quality 100 "${ios_dir}/icon-20x2pt.png"
-  convert "${img}" -resize 60x60    -quality 100 "${ios_dir}/icon-20x3pt.png"
+  convert "${img}" -resize 20x20    -quality 100 "${ios_dir}/icon-20x1pt${ext}"
+  convert "${img}" -resize 40x40    -quality 100 "${ios_dir}/icon-20x2pt${ext}"
+  convert "${img}" -resize 60x60    -quality 100 "${ios_dir}/icon-20x3pt${ext}"
 
-  convert "${img}" -resize 29x29    -quality 100 "${ios_dir}/icon-29x1pt.png"
-  convert "${img}" -resize 58x58    -quality 100 "${ios_dir}/icon-29x2pt.png"
-  convert "${img}" -resize 87x87    -quality 100 "${ios_dir}/icon-29x3pt.png"
+  convert "${img}" -resize 29x29    -quality 100 "${ios_dir}/icon-29x1pt${ext}"
+  convert "${img}" -resize 58x58    -quality 100 "${ios_dir}/icon-29x2pt${ext}"
+  convert "${img}" -resize 87x87    -quality 100 "${ios_dir}/icon-29x3pt${ext}"
 
-  convert "${img}" -resize 40x40     -quality 100 "${ios_dir}/icon-40x1pt.png"
-  convert "${img}" -resize 80x80     -quality 100 "${ios_dir}/icon-40x2pt.png"
-  convert "${img}" -resize 120x120   -quality 100 "${ios_dir}/icon-40x3pt.png"
+  convert "${img}" -resize 40x40     -quality 100 "${ios_dir}/icon-40x1pt${ext}"
+  convert "${img}" -resize 80x80     -quality 100 "${ios_dir}/icon-40x2pt${ext}"
+  convert "${img}" -resize 120x120   -quality 100 "${ios_dir}/icon-40x3pt${ext}"
 
-  convert "${img}" -resize 120x120   -quality 100 "${ios_dir}/icon-60x2pt.png"
-  convert "${img}" -resize 180x180   -quality 100 "${ios_dir}/icon-60x3pt.png"
+  convert "${img}" -resize 120x120   -quality 100 "${ios_dir}/icon-60x2pt${ext}"
+  convert "${img}" -resize 180x180   -quality 100 "${ios_dir}/icon-60x3pt${ext}"
 
-  convert "${img}" -resize 76x76     -quality 100 "${ios_dir}/icon-76x1pt.png"
-  convert "${img}" -resize 152x152   -quality 100 "${ios_dir}/icon-76x2pt.png"
+  convert "${img}" -resize 76x76     -quality 100 "${ios_dir}/icon-76x1pt${ext}"
+  convert "${img}" -resize 152x152   -quality 100 "${ios_dir}/icon-76x2pt${ext}"
 
-  convert "${img}" -resize 167x167   -quality 100 "${ios_dir}/icon-83.5x2pt.png"
-  convert "${img}" -resize 1024x1024 -quality 100 "${ios_dir}/icon-1024x1pt.png"
+  convert "${img}" -resize 167x167   -quality 100 "${ios_dir}/icon-83.5x2pt${ext}"
+  convert "${img}" -resize 1024x1024 -quality 100 "${ios_dir}/icon-1024x1pt${ext}"
 
   # TODO - Populate ./android
 
@@ -94,6 +95,8 @@ main() {
 
   local img=$1; shift
   local dir=$1; shift
+
+  # TODO - Process arguments
 
   create_icons ${img} ${dir}
 }
