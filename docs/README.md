@@ -33,11 +33,9 @@ file called `icon.zip` will be returned. Once unzipped, the directory is structu
 ```
 
 # Endpoints
-
 There are two endpoints. We will assume the app is running on port 8080.
 
 ## `/`
-
 This serves the `index.html` page that has a simple upload file form.
 
 ```
@@ -45,11 +43,10 @@ curl localhost:8080
 ```
 
 ## `/upload`
-
-This requires an `HTTP - POST` and an image file as the body. This is endpoints
-that is used by the form in the `index.html`, or the service can be used directly
-from the REST endpoint (programmatically).
+This requires an `HTTP - POST` and an image file as the body. This endpoint is
+used by the form in the `index.html`. It can be used directly as a service via
+a REST call.
 
 ```
-curl POST etc
+curl -F "file=@icon.jpeg" localhost:8080/upload -o icon.zip
 ```

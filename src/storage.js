@@ -2,9 +2,10 @@ const fs      = require('fs');
 const util    = require('util');
 const multer  = require('multer');
 const crypto  = require('crypto');
-const service = require('./service');
 const path    = require('path');
 const shell   = require('shelljs');
+const service = require('./service');
+const errors  = require('./error');
 const exec    = util.promisify(require('child_process').exec);
 const storage = multer.diskStorage({
 
@@ -44,9 +45,28 @@ const storage = multer.diskStorage({
 
 });
 
+const fileFilter = (req, file, callback) => {
+
+  let ext = path.extname(file.originalname);
+
+  if (ext !== '.png' && ext !== '.jpg' && ext !== '.jpeg') {
+
+    return callback(new errors.InvalidFileError('Only images are allowed'));
+  }
+
+  callback(null, true);
+};
+
+const limits = {
+
+  fileSize: 1024 * 1024
+};
+
 //------------------------------------------------------------------------------
 
 module.exports = {
 
-  storage
+  storage,
+  fileFilter,
+  limits
 };

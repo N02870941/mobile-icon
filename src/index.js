@@ -110,9 +110,6 @@ async function edit_icon(file, res) {
       e = new errors.EmptyUploadError('No file was uploaded');
 
     // Check MIMETYPE
-    } else if (!mimes.includes(file.mimetype)) {
-
-      e = new errors.InvalidFileError('Invalid MIMETYPE: ' + file.mimetype);
     }
 
     // If an error
@@ -156,8 +153,6 @@ async function ingress(req, res) {
 
     console.log("Recieved new post request, uploading file");
 
-    // TODO - check MIMETYPE before saving file
-
     await upload(req, res);
     await edit_icon(req.file, res);
 
@@ -176,5 +171,6 @@ async function ingress(req, res) {
 
 module.exports = {
 
+  upload,
   ingress
 };
