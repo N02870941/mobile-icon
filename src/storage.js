@@ -7,6 +7,17 @@ const shell   = require('shelljs');
 const service = require('./service');
 const errors  = require('./error');
 const exec    = util.promisify(require('child_process').exec);
+
+//------------------------------------------------------------------------------
+
+const types = [
+  '.jpeg',
+  '.pjpeg',
+  '.png'
+];
+
+//------------------------------------------------------------------------------
+
 const storage = multer.diskStorage({
 
   // http://www.riptutorial.com/node-js/example/14210/single-file-upload-using-multer
@@ -45,6 +56,8 @@ const storage = multer.diskStorage({
 
 });
 
+//------------------------------------------------------------------------------
+
 const fileFilter = (req, file, callback) => {
 
   let ext = path.extname(file.originalname);
@@ -57,6 +70,8 @@ const fileFilter = (req, file, callback) => {
   callback(null, true);
 };
 
+//------------------------------------------------------------------------------
+
 const limits = {
 
   fileSize: 1024 * 1024
@@ -66,6 +81,7 @@ const limits = {
 
 module.exports = {
 
+  types,
   storage,
   fileFilter,
   limits

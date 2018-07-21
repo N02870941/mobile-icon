@@ -6,11 +6,6 @@ const errors  = require('./error');
 const service = require('./service');
 const storage = require('./storage');
 const upload  = util.promisify(multer(storage).single('file'));
-const mimes   = [
-  'image/jpeg',
-  'image/pjpeg',
-  'image/png'
-];
 
 //------------------------------------------------------------------------------
 
@@ -74,7 +69,7 @@ function upload_failed(error, res) {
   } else if (error instanceof errors.InvalidFileError) {
 
     body.message = "Invalid file type. Please ensure the file is " +
-                   "of one of the following types: " + mimes;
+                   "of one of the following types: " + storage.types;
     code = 406;
 
   } else {
@@ -108,8 +103,6 @@ async function edit_icon(file, res) {
     if (!file) {
 
       e = new errors.EmptyUploadError('No file was uploaded');
-
-    // Check MIMETYPE
     }
 
     // If an error
@@ -166,6 +159,8 @@ async function ingress(req, res) {
   }
 
 }
+
+exports.ingress = ingress;
 
 //------------------------------------------------------------------------------
 
