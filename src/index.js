@@ -7,6 +7,7 @@ const service = require('./service');
 const storage = require('./storage');
 const upload  = util.promisify(multer(storage).single('file'));
 
+
 //------------------------------------------------------------------------------
 
 /**
@@ -140,7 +141,7 @@ async function edit_icon(file, res) {
  * Entry point function
  * for /upload endpoint.
  */
-async function ingress(req, res) {
+exports.ingress = async function (req, res) {
 
   try {
 
@@ -160,12 +161,10 @@ async function ingress(req, res) {
 
 }
 
-exports.ingress = ingress;
-
 //------------------------------------------------------------------------------
 
 module.exports = {
 
-  upload,
-  ingress
+  ingress : exports.ingress,
+  upload
 };
