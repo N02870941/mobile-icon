@@ -1,6 +1,6 @@
 FROM node:8.7
 
-ADD  ./src /app
+ADD ./src /app
 
 WORKDIR /app
 
