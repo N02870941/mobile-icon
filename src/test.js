@@ -2,12 +2,12 @@ const port   = process.env.PORT || process.argv[2] || 80;
 const path   = require('path');
 const util   = require('util');
 const spawn  = require('child_process').spawn;
-const proc   = spawn('./test.sh', args);
 const script = "./test.sh";
 const file   = "./template/img/icon.jpeg";
 const host   = "127.0.0.1";
 const reqs   = 50;
 const args   = [`--file=${file}`, `--port=${port}`, `--host=${host}`, `--requests=${reqs}`];
+const proc   = spawn('./test.sh', args);
 
 // Pipe to stdout
 proc.stdout.on('data', (data) => {
