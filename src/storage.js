@@ -64,7 +64,7 @@ const fileFilter = (req, file, callback) => {
 
   if (ext !== '.png' && ext !== '.jpg' && ext !== '.jpeg') {
 
-    return callback(new errors.InvalidFileError('Only images are allowed'));
+    return callback(new errors.InvalidFileError('Only PNG and JPG images are allowed'));
   }
 
   callback(null, true);

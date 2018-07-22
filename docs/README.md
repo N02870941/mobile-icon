@@ -48,5 +48,5 @@ used by the form in the `index.html`. It can be used directly as a service via
 a REST call.
 
 ```
-curl -F "file=@icon.jpeg" localhost:8080/upload --fail
+curl -F "file=@icon.jpeg" localhost:8080/upload --fail -o icon.zip
 ```

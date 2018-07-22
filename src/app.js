@@ -6,8 +6,10 @@ const app     = express();
 
 //------------------------------------------------------------------------------
 
+app.set('view engine', 'ejs');
+app.use('/',        index.homepage);
+app.use('/error',   index.renderError);
 app.post('/upload', index.ingress);
-app.use('/', express.static(path.join(__dirname, 'static')));
 
 app.listen(port, () => {
 

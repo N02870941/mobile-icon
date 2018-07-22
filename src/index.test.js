@@ -5,7 +5,7 @@ async function test() {
 
   try {
 
-    const { stdout, stderr } = await exec('./test.sh');
+    const { stdout, stderr } = await exec('./index.test.sh');
 
     console.log('stdout:\n', stdout);
     console.error('stderr:\n', stderr);

@@ -4,16 +4,14 @@ set -e
 # Change working directory to that of this script
 cd "$( dirname "${BASH_SOURCE[0]}" )"
 
+# Constants and variables
 #-------------------------------------------------------------------------------
 
 # Constants
+readonly requests=50
 readonly script_dir=""
 readonly url="localhost:8080/upload"
 readonly file="static/img/icon.jpeg"
-
-#-------------------------------------------------------------------------------
-
-# TODO - Parse command line arguments
 
 # Variables
 pids=""
@@ -34,10 +32,10 @@ else
   echo "Successfully fetched index.html"
 fi
 
-# Start 10 processes asynchronously and store their PIDs in the string
+# Start N processes asynchronously and store their PIDs in the string
 #-------------------------------------------------------------------------------
 
-for i in {1..50}
+for i in $(seq 1 ${requests})
 do
   curl --silent --fail -F "file=@${file}" "${url}" > /dev/null &
 
@@ -54,6 +52,7 @@ do
     result=1
 
     echo "PID ${pid} exited unsuccessfully"
+
   else
     echo "PID ${pid} exited successfully"
   fi

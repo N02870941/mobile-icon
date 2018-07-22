@@ -142,7 +142,7 @@ async function edit_icon(file, res) {
  * Entry point function
  * for /upload endpoint.
  */
-exports.ingress = async function(req, res) {
+async function ingress(req, res) {
 
   try {
 
@@ -164,8 +164,22 @@ exports.ingress = async function(req, res) {
 
 //------------------------------------------------------------------------------
 
+async function renderError(req, res) {
+
+  res.render('error');
+}
+
+async function homepage(req, res) {
+
+  res.render('index');
+}
+
+//------------------------------------------------------------------------------
+
 module.exports = {
 
-  ingress : exports.ingress,
+  ingress,
+  renderError,
+  homepage,
   upload
 };

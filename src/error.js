@@ -14,6 +14,8 @@ class ImageProcessingError extends Error {
 
 }
 
+//------------------------------------------------------------------------------
+
 module.exports = {
 
   EmptyUploadError,
