@@ -109,7 +109,7 @@ do
   fi
 done
 
-echo "${success} out of ${requests} images were successfully posted"
+echo "${success} out of ${requests} requests were successful"
 
 #-------------------------------------------------------------------------------
 
