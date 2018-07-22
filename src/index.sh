@@ -41,9 +41,9 @@ create_icons() {
   local readonly ext="${1}"; shift
 
   # Output directories
-  local readonly ios_dir=${dir}/ios
-  local readonly android_dir=${dir}/android
-  local readonly original_dir=${dir}/original
+  local readonly ios_dir="${dir}/ios"
+  local readonly android_dir="${dir}/android"
+  local readonly original_dir="${dir}/original"
 
   # Create output directories
   create_dir "${dir}"
@@ -53,6 +53,8 @@ create_icons() {
 
   # Copy original into output dir
   cp "${img}" "${original_dir}"
+
+  # TODO - Make asynchronous?
 
   # Populate ./ios
   convert "${img}" -resize 20x20!    -quality 100 "${ios_dir}/icon-20x1pt${ext}"
@@ -85,7 +87,7 @@ create_icons() {
   echo "${dir}.zip"
 
   # Clean up temp files
-  # rm -rf "${dir}"
+  rm -rf "${dir}"
 }
 
 #-------------------------------------------------------------------------------
@@ -96,8 +98,6 @@ main() {
   local img="${1}"; shift
   local dir="${1}"; shift
   local ext="${1}"; shift
-
-  # TODO - Process arguments
 
   create_icons "${img}" "${dir}" "${ext}"
 }
