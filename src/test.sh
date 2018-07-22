@@ -1,5 +1,5 @@
 #!/bin/bash
-set -e
+# set -e
 
 # Change working directory to that of this script
 # cd "$( dirname "${BASH_SOURCE[0]}" )"
