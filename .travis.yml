@@ -19,6 +19,7 @@ script:
     jabaridash/mobile-icon
   - sleep 5
   - docker ps -a
+  - cd src
   - npm test
   - docker push jabaridash/mobile-icon
 
