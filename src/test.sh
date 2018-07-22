@@ -4,42 +4,55 @@ set -e
 # Change working directory to that of this script
 cd "$( dirname "${BASH_SOURCE[0]}" )"
 
+# Makes sure each endpoint is functional
+#
+# 1 * HTTP - GET:  /
+# 1 * HTTP - GET:  /error
+# N * HTTP - POST: /upload
+
 # Constants and variables
 #-------------------------------------------------------------------------------
 
 # Constants
-readonly requests=50
+readonly posts=50
 readonly script_dir=""
-readonly url="localhost:8080/upload"
-readonly file="static/img/icon.jpeg"
+readonly host="localhost"
+readonly port="8080"
+readonly url="${host}:${port}"
+readonly file="template/img/icon.jpeg"
 
 # Variables
 pids=""
 result=0
+success=0
+requests=0
 
-# Curl the homepage
+# Curl the .html pages
 #-------------------------------------------------------------------------------
 
-curl --silent --fail "${url}" > /dev/null &
+# Array of URLs to cURL
+declare -a arr=( \
+  ""             \
+  "error"        \
+)
 
-if ! wait ${pid}; then
+for path in "${arr[@]}"
+do
+  curl --silent --fail "${url}/$path" > /dev/null &
 
-  echo "Could not fetch index.html"
-
-  exit 1
-
-else
-  echo "Successfully fetched index.html"
-fi
+  pids+="$! "
+  ((requests++))
+done
 
 # Start N processes asynchronously and store their PIDs in the string
 #-------------------------------------------------------------------------------
 
-for i in $(seq 1 ${requests})
+for i in {$(seq 1 ${posts})}
 do
-  curl --silent --fail -F "file=@${file}" "${url}" > /dev/null &
+  curl --silent --fail -F "file=@${file}" "${url}/upload" > /dev/null &
 
   pids+="$! "
+  ((requests++))
 done
 
 # Wait for all subprocesses to finish and make sure that ALL of the exit successfully
@@ -48,15 +61,16 @@ done
 for pid in ${pids}
 do
 
+  # Count number of
+  # successful requests
   if ! wait ${pid}; then
     result=1
-
-    echo "PID ${pid} exited unsuccessfully"
-
   else
-    echo "PID ${pid} exited successfully"
+    ((success++))
   fi
 done
+
+echo "${success} out of ${requests} images were successfully posted"
 
 #-------------------------------------------------------------------------------
 

@@ -1,18 +1,9 @@
-class EmptyUploadError extends Error {
 
-}
-
-class CleanupError extends Error {
-
-}
-
-class InvalidFileError extends Error {
-
-}
-
-class ImageProcessingError extends Error {
-
-}
+// Custom error types
+class EmptyUploadError     extends Error {}
+class CleanupError         extends Error {}
+class InvalidFileError     extends Error {}
+class ImageProcessingError extends Error {}
 
 //------------------------------------------------------------------------------
 

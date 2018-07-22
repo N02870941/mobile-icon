@@ -162,13 +162,22 @@ async function ingress(req, res) {
 
 }
 
+// Server-side rendering of .ejs files
 //------------------------------------------------------------------------------
 
+/**
+ * Render error page
+ */
 async function renderError(req, res) {
 
   res.render('error');
 }
 
+//------------------------------------------------------------------------------
+
+/**
+ * Render index.html
+ */
 async function homepage(req, res) {
 
   res.render('index');

@@ -7,7 +7,8 @@
     "doc": "docs"
   },
   "scripts": {
-    "test": "cd src && node index.test.js"
+    "start": "cd src && node app 8080",
+    "test": "cd src && node test"
   },
   "author": "Jabari Dash",
   "license": "MIT",
