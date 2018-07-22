@@ -73,7 +73,7 @@ paths="/ /error"
 for path in ${paths}
 do
 
-  (set -o xtrace; curl --fail --silent --show-error "${url}${path}") &
+  (set -o xtrace; curl --fail --silent --show-error "${url}${path}" > /dev/null) &
 
   pids+="$! "
   ((requests++))
