@@ -2,6 +2,7 @@ const path    = require('path');
 const multer  = require('multer');
 const util    = require('util');
 const fs      = require('fs');
+const crypto  = require('crypto');
 const errors  = require('./error');
 const service = require('./service');
 const storage = require('./storage');
@@ -94,7 +95,8 @@ async function edit_icon(file, res) {
   try {
 
     let e        = undefined;
-    let out_name = 'icon'
+    let hash     = crypto.randomBytes(16).toString('hex')
+    let out_name = path.join('temp', 'out', `icon-${hash}`);
     let zip_name = path.join(`${out_name}.zip`);
     let out_dir  = path.join(out_name);
 
@@ -140,7 +142,7 @@ async function edit_icon(file, res) {
  * Entry point function
  * for /upload endpoint.
  */
-exports.ingress = async function (req, res) {
+exports.ingress = async function(req, res) {
 
   try {
 

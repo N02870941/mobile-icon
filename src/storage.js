@@ -28,7 +28,7 @@ const storage = multer.diskStorage({
     let ext   = path.extname(file.originalname);
     let date  = Date.now();
     let token = crypto.randomBytes(16).toString('hex');
-    let dir   = path.join(__dirname, 'uploads', token);
+    let dir   = path.join(__dirname, 'temp', 'uploads', token);
 
     console.log("Checking to see if upload directory exists");
 
