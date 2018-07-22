@@ -19,6 +19,8 @@ script:
   - docker ps -a
   - cd src
   - npm test
+
+after_success:
   - docker push jabaridash/mobile-icon
 
 on:

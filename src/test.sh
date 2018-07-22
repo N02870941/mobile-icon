@@ -72,7 +72,8 @@ paths="/ /error"
 
 for path in ${paths}
 do
-  curl --fail --silent --show-error "${url}${path}" > /dev/null &
+
+  (set -o xtrace; curl --fail --silent --show-error "${url}${path}") &
 
   pids+="$! "
   ((requests++))
@@ -84,7 +85,8 @@ done
 
 for i in {$(seq 1 ${posts})}
 do
-  curl --fail --silent --show-error -F "file=@${file}" "${url}/upload" > /dev/null &
+
+  (set -o xtrace; curl --fail --silent --show-error -F "file=@${file}" "${url}/upload" > /dev/null) &
 
   pids+="$! "
   ((requests++))
