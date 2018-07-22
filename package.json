@@ -7,7 +7,7 @@
     "doc": "docs"
   },
   "scripts": {
-    "test": "curl localhost:8080"
+    "test": "cd src && node test.js"
   },
   "author": "Jabari Dash",
   "license": "MIT",
