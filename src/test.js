@@ -1,37 +1,30 @@
-const port = process.env.PORT || process.argv[2] || 80;
-const path = require('path');
-const util = require('util');
-const exec = util.promisify(require('child_process').exec);
+const port   = process.env.PORT || process.argv[2] || 80;
+const path   = require('path');
+const util   = require('util');
+const spawn  = require('child_process').spawn;
+const proc   = spawn('./test.sh', args);
+const script = "./test.sh";
+const file   = "./template/img/icon.jpeg";
+const host   = "127.0.0.1";
+const reqs   = 50;
+const args   = [`--file=${file}`, `--port=${port}`, `--host=${host}`, `--requests=${reqs}`];
 
-/**
- * Calls test script.
- */
-async function test() {
+// Pipe to stdout
+proc.stdout.on('data', (data) => {
 
-  try {
+  console.log(`${data}`);
+});
 
-    // Build the command
-    let script  = "test.sh";
-    let file    = path.join(__dirname, "template", "img", "icon.jpeg");
-    let host    = "localhost";
-    let reqs    = 50;
-    let command = `./${script} --file=${file} --port=${port} --host=${host} --requests=${reqs}`;
+// Pipe to stderr
+proc.stderr.on('data', (data) => {
 
-    // Execute it
-    const { stdout, stderr } = await exec(command);
+  console.error(`${data}`);
+});
 
-    // Print stdout and stderr
-    console.log('stdout:\n', stdout);
-    console.error('stderr:\n', stderr);
+// Close with same exit code as script
+proc.on('close', (code) => {
 
-  // Any errors means we failed
-  } catch (error) {
+  console.log(`child process exited with code ${code}`);
 
-    console.error('Test failed');
-    console.error(error);
-
-    process.exit(1);
-  }
-}
-
-test();
+  process.exit(code);
+});

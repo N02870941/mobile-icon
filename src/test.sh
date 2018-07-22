@@ -2,7 +2,7 @@
 set -e
 
 # Change working directory to that of this script
-cd "$( dirname "${BASH_SOURCE[0]}" )"
+# cd "$( dirname "${BASH_SOURCE[0]}" )"
 
 # Makes sure each endpoint is functional
 #
@@ -70,10 +70,9 @@ echo "URL:   ${url}"
 # Array of URLs to cURL
 paths="/ /error"
 
-
 for path in ${paths}
 do
-  curl --silent --fail "${url}${path}" > /dev/null &
+  curl --fail --silent --show-error "${url}${path}" > /dev/null &
 
   pids+="$! "
   ((requests++))
