@@ -1,3 +1,4 @@
+const path = require('path');
 const util = require('util');
 const exec = util.promisify(require('child_process').exec);
 
@@ -10,15 +11,11 @@ async function test() {
 
     // Build the command
     let script  = "test.sh";
-    let file    = "template/img/icon.jpeg";
+    let file    = path.join(__dirname, "template", "img", "icon.jpeg");
     let port    = "8080";
     let host    = "localhost";
     let reqs    = 50;
-    let command = `./${script}    ` +
-                  `--file ${file} ` +
-                  `--port ${port} ` +
-                  `--host ${host} ` +
-                  `--requests ${reqs}`;
+    let command = `./${script} --file=${file} --port=${port} --host=${host} --requests=${reqs}`;
 
     // Execute it
     const { stdout, stderr } = await exec(command);

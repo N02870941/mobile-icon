@@ -16,48 +16,39 @@ cd "$( dirname "${BASH_SOURCE[0]}" )"
 # NOTE - https://stackoverflow.com/questions/192249/how-do-i-parse-command-line-arguments-in-bash
 
 # Process command line args
-POSITIONAL=()
-while [[ $# -gt 0 ]]
+for i in "$@"
 do
-key="$1"
-
-case $key in
-    -p|--port)
-    port="$2"
-    shift # past argument
-    shift # past value
+case $i in
+    -p=*|--port=*)
+    port="${i#*=}"
+    shift # past argument=value
     ;;
 
-    -h|--host)
-    host="$2"
-    shift # past argument
-    shift # past value
+    -r=*|--requests=*)
+    posts="${i#*=}"
+    shift # past argument=value
     ;;
 
-    -r|--requests)
-    posts="$2"
-    shift # past argument
-    shift # past value
+    -h=*|--host=*)
+    host="${i#*=}"
+    shift # past argument=value
     ;;
 
-    -f|--file)
-    file="$2"
-    shift # past argument
-    shift # past value
+    -f=*|--file=*)
+    file="${i#*=}"
+    shift # past argument=value
     ;;
 
-    --default)
-    DEFAULT=YES
-    shift # past argument
-    ;;
-
-    *)    # unknown option
-    POSITIONAL+=("$1") # save it in an array for later
-    shift # past argument
+    *)
+    # unknown option
     ;;
 esac
 done
-set -- "${POSITIONAL[@]}" # restore positional parameters
+
+echo "POSTS: ${posts}"
+echo "HOST: ${host}"
+echo "PORT: ${port}"
+echo "FILE: ${file}"
 
 # Variables
 url="${host}:${port}"
