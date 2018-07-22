@@ -45,17 +45,19 @@ case $i in
 esac
 done
 
-echo "POSTS: ${posts}"
-echo "HOST: ${host}"
-echo "PORT: ${port}"
-echo "FILE: ${file}"
-
 # Variables
 url="${host}:${port}"
 pids=""
 result=0
 success=0
 requests=0
+
+# Show variables
+echo "POSTS: ${posts}"
+echo "HOST:  ${host}"
+echo "PORT:  ${port}"
+echo "FILE:  ${file}"
+echo "URL:   ${url}"
 
 # Curl the .html pages
 #-------------------------------------------------------------------------------
