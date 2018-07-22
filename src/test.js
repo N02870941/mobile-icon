@@ -8,11 +8,26 @@ async function test() {
 
   try {
 
-    const { stdout, stderr } = await exec('./test.sh');
+    // Build the command
+    let script  = "test.sh";
+    let file    = "template/img/icon.jpeg";
+    let port    = "8080";
+    let host    = "localhost";
+    let reqs    = 50;
+    let command = `./${script}    ` +
+                  `--file ${file} ` +
+                  `--port ${port} ` +
+                  `--host ${host} ` +
+                  `--requests ${reqs}`;
 
+    // Execute it
+    const { stdout, stderr } = await exec(command);
+
+    // Print stdout and stderr
     console.log('stdout:\n', stdout);
     console.error('stderr:\n', stderr);
 
+  // Any errors means we failed
   } catch (error) {
 
     console.error('Test failed');

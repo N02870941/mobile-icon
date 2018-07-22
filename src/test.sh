@@ -13,15 +13,54 @@ cd "$( dirname "${BASH_SOURCE[0]}" )"
 # Constants and variables
 #-------------------------------------------------------------------------------
 
-# Constants
-readonly posts=50
-readonly script_dir=""
-readonly host="localhost"
-readonly port="8080"
-readonly url="${host}:${port}"
-readonly file="template/img/icon.jpeg"
+# NOTE - https://stackoverflow.com/questions/192249/how-do-i-parse-command-line-arguments-in-bash
+
+# Process command line args
+POSITIONAL=()
+while [[ $# -gt 0 ]]
+do
+key="$1"
+
+case $key in
+    -p|--port)
+    port="$2"
+    shift # past argument
+    shift # past value
+    ;;
+
+    -h|--host)
+    host="$2"
+    shift # past argument
+    shift # past value
+    ;;
+
+    -r|--requests)
+    posts="$2"
+    shift # past argument
+    shift # past value
+    ;;
+
+    -f|--file)
+    file="$2"
+    shift # past argument
+    shift # past value
+    ;;
+
+    --default)
+    DEFAULT=YES
+    shift # past argument
+    ;;
+
+    *)    # unknown option
+    POSITIONAL+=("$1") # save it in an array for later
+    shift # past argument
+    ;;
+esac
+done
+set -- "${POSITIONAL[@]}" # restore positional parameters
 
 # Variables
+url="${host}:${port}"
 pids=""
 result=0
 success=0
