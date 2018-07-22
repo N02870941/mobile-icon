@@ -11,11 +11,11 @@ async function test() {
   try {
 
     // Build the command
-    let script  = "./test.sh";
-    let file    = "./template/img/icon.jpeg";
+    let script  = "test.sh";
+    let file    = path.join(__dirname, "template", "img", "icon.jpeg");
     let host    = "localhost";
     let reqs    = 50;
-    let command = `${script} --file=${file} --port=${port} --host=${host} --requests=${reqs}`;
+    let command = `./${script} --file=${file} --port=${port} --host=${host} --requests=${reqs}`;
 
     // Execute it
     const { stdout, stderr } = await exec(command);

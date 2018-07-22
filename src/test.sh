@@ -13,6 +13,11 @@ cd "$( dirname "${BASH_SOURCE[0]}" )"
 # Constants and variables
 #-------------------------------------------------------------------------------
 
+# port=8080
+# posts=50
+# host="localhost"
+# file="./template/img/icon.jpeg"
+
 # NOTE - https://stackoverflow.com/questions/192249/how-do-i-parse-command-line-arguments-in-bash
 
 # Process command line args
@@ -63,25 +68,24 @@ echo "URL:   ${url}"
 #-------------------------------------------------------------------------------
 
 # Array of URLs to cURL
-declare -a arr=( \
-  ""             \
-  "error"        \
-)
+paths="/ /error"
 
-for path in "${arr[@]}"
+
+for path in ${paths}
 do
-  curl --silent --fail "${url}/$path" > /dev/null &
+  curl --silent --fail "${url}${path}" > /dev/null &
 
   pids+="$! "
   ((requests++))
 done
+
 
 # Start N processes asynchronously and store their PIDs in the string
 #-------------------------------------------------------------------------------
 
 for i in {$(seq 1 ${posts})}
 do
-  curl --silent --fail -F "file=@${file}" "${url}/upload" > /dev/null &
+  curl --fail --silent --show-error -F "file=@${file}" "${url}/upload" > /dev/null &
 
   pids+="$! "
   ((requests++))
@@ -101,6 +105,7 @@ do
     ((success++))
   fi
 done
+
 
 echo "${success} out of ${requests} requests were successful"
 
