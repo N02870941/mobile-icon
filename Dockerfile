@@ -1,7 +1,6 @@
 FROM node:8.7
 
-ADD  ./src        /app
-COPY package.json /app
+ADD  ./src /app
 
 WORKDIR /app
 

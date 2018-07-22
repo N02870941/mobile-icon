@@ -1,5 +1,0 @@
-// Manipulate DOM once ready
-$(() => {
-
-
-});
