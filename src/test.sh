@@ -1,5 +1,4 @@
 #!/bin/bash
-# set -e
 
 # Change working directory to that of this script
 # cd "$( dirname "${BASH_SOURCE[0]}" )"
@@ -12,11 +11,6 @@
 
 # Constants and variables
 #-------------------------------------------------------------------------------
-
-# port=8080
-# posts=50
-# host="localhost"
-# file="./template/img/icon.jpeg"
 
 # NOTE - https://stackoverflow.com/questions/192249/how-do-i-parse-command-line-arguments-in-bash
 
@@ -78,7 +72,6 @@ do
   pids+="$! "
   ((requests++))
 done
-
 
 # Start N processes asynchronously and store their PIDs in the string
 #-------------------------------------------------------------------------------

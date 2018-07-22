@@ -3,25 +3,22 @@ sudo: required
 services:
   - docker
 
-# Sign into docker then
-# build, run, test,
-# and push  the image
 script:
-  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-  - docker build -t jabaridash/mobile-icon .
+  - echo "${DOCKER_PASSWORD}" | docker login -u "${DOCKER_USERNAME}" --password-stdin
+  - docker build -t ${$DOCKER_USERNAME}/mobile-icon .
   - |
-    docker run             \
-    -d                     \
-    -p 8080:80             \
-    --name mobile-icon     \
-    jabaridash/mobile-icon
-  - sleep 10
+    docker run         \
+    -d                 \
+    --publish 8080:80  \
+    --name mobile-icon \
+    ${$DOCKER_USERNAME}/mobile-icon
+  - sleep 5
   - docker ps -a
   - cd src
   - npm test
 
 after_success:
-  - docker push jabaridash/mobile-icon
+  - docker push ${$DOCKER_USERNAME}/mobile-icon
 
 on:
   branch: master

@@ -94,24 +94,18 @@ async function edit_icon(file, res) {
 
   try {
 
-    let e        = undefined;
-    let hash     = crypto.randomBytes(16).toString('hex')
-    let out_name = path.join('temp', 'out', `icon-${hash}`);
-    let zip_name = path.join(`${out_name}.zip`);
-    let out_dir  = path.join(out_name);
+    let hash     = crypto.randomBytes(16).toString('hex');
+    let out_dir  = `temp-icon-${hash}`;
+    let zip_name = `${out_dir}.zip`;
+    let ext      = path.extname(file.originalname);
 
     // Make sure a file
     // was actually uploaded
     if (!file) {
 
-      e = new errors.EmptyUploadError('No file was uploaded');
-    }
+      let e = new errors.EmptyUploadError('No file was uploaded');
 
-    // If an error
-    // arose, throw it
-    if (e) {
-
-      throw e;
+      throw e
     }
 
     // If we got to this point, we can confindently
@@ -121,11 +115,11 @@ async function edit_icon(file, res) {
     // the results, then send it back to the client.
     console.log("Upload successful, creating icons");
 
-    let zip = await service.modify(file.path, out_dir);
+    let zip = await service.modify(file.path, out_dir, ext);
 
     console.log('Sending zip file back to client');
 
-    res.download(zip_name, path.join(__dirname, zip), (error) => {
+    res.download(zip_name, 'icon.zip', (error) => {
 
       download_callback(zip_name, file.destination, out_dir, error);
     });

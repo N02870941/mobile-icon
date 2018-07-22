@@ -42,14 +42,14 @@ async function cleanup() {
  * Runs the scripts that modify
  * the uploaded image.
  */
-async function modify(in_file, out_dir) {
+async function modify(in_file, out_dir, ext) {
 
   // TODO - Edit image using NPM package instead
   // https://github.com/EyalAr/lwip
 
   console.log("Executing imagemagick shell script");
 
-  const {stdout, stderr} = await exec(`./index.sh \"${in_file}\" \"${out_dir}\"`);
+  const {stdout, stderr} = await exec(`./index.sh \"${in_file}\" \"${out_dir}\" \"${ext}\"`);
   const zip              = removeNewLine(stdout);
 
   console.log("Script complete");

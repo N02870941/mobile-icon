@@ -83,6 +83,7 @@ module.exports = {
 
   types,
   storage,
-  fileFilter,
-  limits
+  // limits,
+  fileFilter
+
 };

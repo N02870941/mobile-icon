@@ -1,6 +1,7 @@
 icon
 uploads
 temp
+temp-*
 node_modules
 .DS_Store
 *.zip

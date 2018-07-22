@@ -6,8 +6,12 @@ const script = "./test.sh";
 const file   = "./template/img/icon.jpeg";
 const host   = "127.0.0.1";
 const reqs   = 50;
-const args   = [`--file=${file}`, `--port=${port}`, `--host=${host}`, `--requests=${reqs}`];
-const proc   = spawn('./test.sh', args);
+const proc   = spawn(`./test.sh`, [
+                     `--file=${file}`,
+                     `--port=${port}`,
+                     `--host=${host}`,
+                     `--requests=${reqs}`]
+);
 
 // Pipe to stdout
 proc.stdout.on('data', (data) => {
