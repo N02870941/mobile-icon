@@ -94,11 +94,6 @@ async function edit_icon(file, res) {
 
   try {
 
-    let hash     = crypto.randomBytes(16).toString('hex');
-    let out_dir  = `temp-icon-${hash}`;
-    let zip_name = `${out_dir}.zip`;
-    let ext      = path.extname(file.originalname);
-
     // Make sure a file
     // was actually uploaded
     if (!file) {
@@ -107,6 +102,11 @@ async function edit_icon(file, res) {
 
       throw e
     }
+
+    let hash     = crypto.randomBytes(16).toString('hex');
+    let out_dir  = `temp-icon-${hash}`;
+    let zip_name = `${out_dir}.zip`;
+    let ext      = path.extname(file.originalname);
 
     // If we got to this point, we can confindently
     // assume the the upload file was successfully
@@ -169,20 +169,9 @@ async function renderError(req, res) {
 
 //------------------------------------------------------------------------------
 
-/**
- * Render index.html
- */
-async function homepage(req, res) {
-
-  res.render('index');
-}
-
-//------------------------------------------------------------------------------
-
 module.exports = {
 
   ingress,
   renderError,
-  homepage,
   upload
 };

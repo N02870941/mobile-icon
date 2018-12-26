@@ -8,7 +8,7 @@
   },
   "scripts": {
     "start": "node app 8080",
-    "test": "node test 8080"
+    "test": "node test 127.0.0.1 8080"
   },
   "author": "Jabari Dash",
   "license": "MIT",

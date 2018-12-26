@@ -1,11 +1,11 @@
-const port   = process.env.PORT || process.argv[2] || 80;
+const host   = process.env.HOST || process.argv[2] || "127.0.0.1";
+const port   = process.env.PORT || process.argv[3] || 80;
+const file   = process.env.FILE || process.argv[4] || "./template/img/icon.jpeg";
+const reqs   = process.env.REQS || process.argv[5] || 50;
 const path   = require('path');
 const util   = require('util');
 const spawn  = require('child_process').spawn;
 const script = "./test.sh";
-const file   = "./template/img/icon.jpeg";
-const host   = "127.0.0.1";
-const reqs   = 50;
 const proc   = spawn(`./test.sh`, [
                      `--file=${file}`,
                      `--port=${port}`,
