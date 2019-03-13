@@ -5,8 +5,6 @@ const express  = require('express');
 const app      = express();
 const template = path.join(__dirname, 'template');
 
-//------------------------------------------------------------------------------
-
 app.set('view engine', 'ejs');
 app.set('views', template);
 app.use(express.static(template));
