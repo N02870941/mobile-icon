@@ -11,72 +11,36 @@ const upload  = util.promisify(multer(storage).single('file'));
 //------------------------------------------------------------------------------
 
 /**
- * Executes as a callback
- * function to res.download()
- * when the result file is
- * being sent back to the client.
- */
-async function download_callback(zip_name, dest, out_dir, error) {
-
-  try {
-
-    if (error) {
-
-      console.error("An error occured when sending zip file back to client");
-      console.error(error);
-
-    } else {
-
-      console.log("Zip file successfully sent back to client");
-    }
-
-    await service.cleanup(zip_name, dest, out_dir);
-
-  } catch (e) {
-
-    console.error("Callback for res.download() failed");
-    console.error(e);
-  }
-}
-
-//------------------------------------------------------------------------------
-
-/**
- * Sends an error message
- * back to the client.
+ * Sends an error message back to the client.
  */
 function upload_failed(error, res) {
-
-  console.error('Upload unsuccessful, sending error to client');
-
-  if (error) {
-
+  if (error)
     console.error(error);
-  }
 
+    // TODO - We do not actually have to switch
+    // because all custom errors have messages
+    // that should be safe to send directly back to
+    // the client. Simply check whether or not the
+    // extension is one of the custom types (perhaps)
+    // they should all subclass some common super type.
+    // Then send the error's message. If not, use a
+    // generic error message
+
+  let body = {message : "Could not upload file"};
   let code = 500;
-  let body = {
 
-    message : "Could not upload file"
-  };
-
-  // File not found or
-  // no file was sent to server
-  if (error instanceof errors.EmptyUploadError) {
-
-    body.message = "No file was uploaded. Please upload a file before submitting form.";
-    code = 406;
-
-  } else if (error instanceof errors.InvalidFileError) {
-
-    body.message = "Invalid file type. Please ensure the file is " +
-                   "of one of the following types: " + storage.types;
-    code = 406;
-
-  } else {
-
-    body.message = `An unknown error occured. Please report bug`,
-    body.url     = `https://github.com/N02870941/mobile-icon/issues`
+  switch (typeof error) {
+    case errors.EmptyUploadError:
+      body.message = "No file was uploaded. Please upload a file before submitting form."
+      code         = 406;
+      break
+    case error instanceof errors.InvalidFileError:
+      body.message = `Invalid file type. Please ensure the file is of one of the following types:  + ${storage.types}`
+      code         = 406
+      break
+    default:
+      body.message = `An unknown error occured. Please report bug`,
+      body.url     = `https://github.com/N02870941/mobile-icon/issues`
   }
 
   res.status(code).json(body);
@@ -85,83 +49,43 @@ function upload_failed(error, res) {
 //------------------------------------------------------------------------------
 
 /**
- * Calls the modify function
- * that edits the photos then
- * sends the zipped result back
- * to the client.
+ * Calls the modify function that edits the photos then
+ * sends the zipped result back to the client.
  */
 async function edit_icon(file, res) {
 
-  try {
+  if (!file)
+    throw new errors.EmptyUploadError('No file was uploaded')
 
-    // Make sure a file
-    // was actually uploaded
-    if (!file) {
+  const hash    = crypto.randomBytes(16).toString('hex');
+  const out_dir = `temp-icon-${hash}`;
+  const ext     = path.extname(file.originalname);
+  const zip     = await service.modify(file.path, out_dir, ext);
 
-      let e = new errors.EmptyUploadError('No file was uploaded');
+  res.download(zip, 'icon.zip', (error) => {
+    if (error)
+      console.error(error)
 
-      throw e
-    }
-
-    let hash     = crypto.randomBytes(16).toString('hex');
-    let out_dir  = `temp-icon-${hash}`;
-    let zip_name = `${out_dir}.zip`;
-    let ext      = path.extname(file.originalname);
-
-    // If we got to this point, we can confindently
-    // assume the the upload file was successfully
-    // uploaded and the file is in a valid image form.
-    // We can then proceed to edit the image and zip
-    // the results, then send it back to the client.
-    console.log("Upload successful, creating icons");
-
-    let zip = await service.modify(file.path, out_dir, ext);
-
-    console.log('Sending zip file back to client');
-
-    res.download(zip_name, 'icon.zip', (error) => {
-
-      download_callback(zip_name, file.destination, out_dir, error);
-    });
-
-  } catch(error) {
-
-    upload_failed(error, res);
-  }
+    service
+    .cleanup(zip, file.destination, out_dir)
+    .catch(e => console.error(e))
+  });
 }
 
 //------------------------------------------------------------------------------
 
 /**
- * Entry point function
- * for /upload endpoint.
+ * Entry point function for /upload endpoint.
  */
-async function ingress(req, res) {
-
-  try {
-
-    console.log("Recieved new post request, uploading file");
-
-    await upload(req, res);
-    await edit_icon(req.file, res);
-
-    console.log('Transaction completed without errors, response on it\'s way back to client');
-
-  } catch(error) {
-
-    console.error('Transaction completed with errors. Sending response to client');
-
-    upload_failed(error, res);
-  }
-
+function ingress(req, res) {
+  upload(req, res)
+  .then(() => edit_icon(req.file, res))
+  .catch(() => upload_failed(req.file, res))
 }
 
 // Server-side rendering of .ejs files
 //------------------------------------------------------------------------------
 
-/**
- * Render error page
- */
 async function renderError(req, res) {
 
   res.render('error');
@@ -170,8 +94,6 @@ async function renderError(req, res) {
 //------------------------------------------------------------------------------
 
 module.exports = {
-
   ingress,
-  renderError,
-  upload
+  renderError
 };

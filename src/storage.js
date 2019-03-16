@@ -1,12 +1,11 @@
-const fs      = require('fs');
-const util    = require('util');
-const multer  = require('multer');
-const crypto  = require('crypto');
-const path    = require('path');
-const shell   = require('shelljs');
-const service = require('./service');
-const errors  = require('./error');
-const exec    = util.promisify(require('child_process').exec);
+const fs     = require('fs');
+const util   = require('util');
+const multer = require('multer');
+const crypto = require('crypto');
+const path   = require('path');
+const shell  = require('shelljs');
+const errors = require('./error');
+const exec   = util.promisify(require('child_process').exec);
 
 //------------------------------------------------------------------------------
 
@@ -18,56 +17,52 @@ const types = [
 
 //------------------------------------------------------------------------------
 
+/**
+ * Removes the extension and returns just a filename.
+ */
+function removeExtension(filename) {
+
+  return filename.split('.')
+                 .slice(0, -1)
+                 .join('.');
+}
+
+//------------------------------------------------------------------------------
+
+// http://www.riptutorial.com/node-js/example/14210/single-file-upload-using-multer
 const storage = multer.diskStorage({
-
-  // http://www.riptutorial.com/node-js/example/14210/single-file-upload-using-multer
-
   destination: (req, file, callback) => {
+    let name  = removeExtension(file.originalname)
+    let ext   = path.extname(file.originalname)
+    let date  = Date.now()
+    let token = crypto.randomBytes(16).toString('hex')
+    let dir   = path.join(__dirname, 'temp', 'uploads', token)
 
-    let name  = service.removeExtension(file.originalname);
-    let ext   = path.extname(file.originalname);
-    let date  = Date.now();
-    let token = crypto.randomBytes(16).toString('hex');
-    let dir   = path.join(__dirname, 'temp', 'uploads', token);
+    if (!fs.existsSync(dir))
+      shell.mkdir('-p', dir)
 
-    console.log("Checking to see if upload directory exists");
-
-    // Check if the directory exists
-    if (!fs.existsSync(dir)) {
-
-      console.log('Upload directory does not exist, creating it now');
-
-      shell.mkdir('-p', dir);
-
-    // Directory already there
-    } else {
-
-      console.log('Upload directory already exists');
-    }
-
-    callback(null, dir);
+    if (typeof callback === 'function')
+      callback(null, dir)
   },
 
-  // Keep the original file name
   filename: (req, file, callback) => {
 
-    callback(null, file.originalname);
+    if (typeof callback === 'function')
+      callback(null, file.originalname)
   }
-
 });
 
 //------------------------------------------------------------------------------
 
 const fileFilter = (req, file, callback) => {
-
   let ext = path.extname(file.originalname);
 
-  if (ext !== '.png' && ext !== '.jpg' && ext !== '.jpeg') {
+  // TODO - Search through type array instead
 
-    return callback(new errors.InvalidFileError('Only PNG and JPG images are allowed'));
-  }
-
-  callback(null, true);
+  if (ext !== '.png' && ext !== '.jpg' && ext !== '.jpeg')
+    return callback(new errors.InvalidFileError('Only PNG and JPG images are allowed'))
+  else
+    callback(null, true);
 };
 
 //------------------------------------------------------------------------------
@@ -80,10 +75,8 @@ const limits = {
 //------------------------------------------------------------------------------
 
 module.exports = {
-
   types,
   storage,
   // limits,
   fileFilter
-
 };

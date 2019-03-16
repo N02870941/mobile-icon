@@ -10,4 +10,4 @@ app.set('views', template);
 app.use(express.static(template));
 app.use('/error',   index.renderError);
 app.post('/upload', index.ingress);
-app.listen(port, () => console.log(`Listening on port ${port}`));
+app.listen(port, () => console.log(`Listening on port: ${port}`));
