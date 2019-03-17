@@ -3,6 +3,10 @@ sudo: required
 services:
   - docker
 
+cache:
+  directories:
+    - src/node_modules
+
 script:
   - cd src
   - npm install
