@@ -1,4 +1,4 @@
 const port = process.env.PORT || process.argv[2] || 80;
-const app  = requir('./app')
+const app  = require('./app')
 
 app.listen(port)

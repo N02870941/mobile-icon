@@ -4,8 +4,10 @@ services:
   - docker
 
 script:
-  - cd src && npm install && npm test
-  
+  - cd src
+  - npm install
+  - npm test
+
 after_success:
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
   - docker build -t jabaridash/mobile-icon .

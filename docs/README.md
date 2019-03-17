@@ -24,13 +24,18 @@ file called `icon.zip` will be returned. Once unzipped, the directory is structu
 |   └── icon-20@2x.png
 |  
 └── /android
-    ├── icon-20@2x.png
-    ├── icon-30@2x.png
+    ├── /xxxhdpi
+    |   └── icon.png
+    |
+    ├── /mdpi
+    .   └── icon.png
     .
     .
-    .
-    └── icon-40@2x.png
+    └── /ldpi
+        └── icon.png
 ```
+
+All iOS assets are in a single directory where the file names represent the image resolution. Android assets are separated by folder where the folder name represents the DPI the contained asset was created for.
 
 # Endpoints
 There are three endpoints. We will assume the app is running on port `8080`.
@@ -46,10 +51,6 @@ curl localhost:8080
 This requires an `HTTP - POST` request of a form with an image file called `file`
 as the body. This endpoint is used by the form in the `index.html`. It can be
 used directly as a service via a REST call.
-
-## `/error`
-All server-side errors will redirect to this page with a message describing the
-error. The client is then redirected to the homepage.
 
 ```
 curl -F "file=@icon.jpeg" localhost:8080/upload --fail -o icon.zip
