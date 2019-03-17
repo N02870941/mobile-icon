@@ -7,7 +7,7 @@ image resized to all of the required sizes for Android and iOS application compl
 
 # How to use
 
-The app has one function. You navigate to the homepage, upload an image an a zip
+The application has one function. You navigate to the homepage, upload an image an a zip
 file called `icon.zip` will be returned. Once unzipped, the directory is structured as follows:
 
 ```
