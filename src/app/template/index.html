@@ -25,6 +25,10 @@
         display: none;
       }
 
+      .centered-input {
+        display: inline;
+      }
+
       input {
         max-width  : 50%;
         box-sizing : border-box
@@ -54,22 +58,24 @@
             Upload a file and a zip file of the exported icons will be returned.
           </p>
 
-          <!-- Form to upload file -->
-          <form id="data" action="/upload" enctype="multipart/form-data" method="post">
+          <!-- Form -->
+          <form id="form">
 
             <!-- Input to select file -->
-            <label class="form-element">
-              <input type="file" name="file" accept="image/*" class="btn btn-outline-info">
-            </label>
+            <div class="form-group">
+              <label class="form-element">
+                <input id="file" type="file" name="file" accept="image/*" class="btn btn-outline-info">
+              </label>
 
-            <!-- TODO - Add a checkbox that lets the user keep file's original name -->
-            <!-- If that checkbox is unchecked, a new input field will appear that allowss -->
-            <!-- the user to specify the name of the file.  -->
+              <small id="file-hint" class="text-danger initially-hidden">
+                One file must be selected.
+              </small>
+            </div>
 
             <!-- Submit button -->
-            <label class="form-element">
-              <input id="submit" type="submit" value="Upload" class="btn btn-primary">
-            </label>
+            <div class="form-group">
+              <button id="submit-button" type="submit" class="btn btn-primary" disabled>Upload</button>
+            </div>
 
           </form>
         </div>
@@ -84,6 +90,33 @@
         </div>
       </div>
 
+      <!-- The Modal -->
+      <!-- https://www.w3schools.com/bootstrap4/bootstrap_modal.asp -->
+      <div class="modal fade" id="modal">
+        <div class="modal-dialog">
+          <div class="modal-content">
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+              <h4 class="modal-title">An error occurred!</h4>
+              <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+
+            <!-- Modal body -->
+            <div class="modal-body" id="modal-body">
+              <p id='error-msg'></p>
+              <a id='error-url' class='initially-hidden'>GitHub Issues Page</a>
+            </div>
+
+            <!-- Modal footer -->
+            <div class="modal-footer">
+              <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
     </div>
 
     <!-- Dependencies -->
@@ -93,8 +126,83 @@
     <script src="http://malsup.github.io/min/jquery.form.min.js"></script>
 
     <script>
-      // TODO - Add logic here to enable and disable the upload button depending
-      // on whether or not the user has selected a file. https://stackoverflow.com/questions/25793880/how-to-check-if-input-file-is-empty-in-jquery
+      $(document).ready(function() {
+
+        $('#form').on('keyup change paste', function() {
+          const file   = document.getElementById('file')
+          const submit = document.getElementById('submit-button')
+
+          submit.disabled = file.files.length != 1
+        })
+
+        // https://stackoverflow.com/questions/34586671/download-pdf-file-using-jquery-ajax
+        // https://stackoverflow.com/questions/10899384/uploading-both-data-and-files-in-one-form-using-ajax
+        // https://stackoverflow.com/questions/10529476/javascript-window-url-is-undefined-in-function
+        // https://stackoverflow.com/questions/17657184/using-jquerys-ajax-method-to-retrieve-images-as-a-blob
+        $('#form').submit(function(event) {
+          event.preventDefault()
+
+          const form = $(this)
+          const data = new FormData(this)
+
+          $.ajax({
+            type: 'POST',
+            url: '/upload',
+            enctype: "multipart/form-data",
+            data: data,
+            xhrFields: {
+              responseType: 'blob'
+            },
+            xhr: function() {
+              let xhr = new XMLHttpRequest()
+
+              xhr.onreadystatechange = function() {
+                  if (xhr.readyState == 2) {
+                      if(xhr.status == 200) {
+                          xhr.responseType = "blob";
+                      } else {
+                          xhr.responseType = "text";
+                      }
+                  }
+              }
+
+              return xhr
+            },
+            success: function(blob) {
+              const url     = window.URL || window.webkitURL
+              const link    = document.createElement('a')
+              link.href     = url.createObjectURL(blob)
+              link.download = 'icon.zip'
+
+              document.body.appendChild(link)
+              link.click()
+            },
+            error: function(xhr, status, error) {
+              const message = document.getElementById('error-msg')
+              const url     = document.getElementById('error-url')
+              const res     = JSON.parse(xhr.responseText)
+
+              message.innerHTML = res.message
+
+              if (res.url) {
+                url.href = res.url
+                url.setAttribute('target', '_blank')
+                url.style.display = 'inline'
+              }
+
+              $("#modal").modal()
+            },
+            complete: function() {
+              form.trigger('reset')
+              form.trigger('change')
+            },
+            cached: false,
+            contentType: false,
+            processData: false
+          })
+        })
+
+      })
     </script>
   </body>
 </html>

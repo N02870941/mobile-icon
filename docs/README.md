@@ -16,24 +16,24 @@ file called `icon.zip` will be returned. Once unzipped, the directory is structu
 |   └── icon.png
 |  
 ├── /ios
-|   ├── icon-20x1pt.png
-|   ├── icon-1024x1pt.png
+|   ├── icon-20@1x.png
+|   ├── icon-1024@1x.png
 |   .
 |   .
 |   .
-|   └── icon-20x2pt.png
+|   └── icon-20@2x.png
 |  
 └── /android
-    ├── icon-20x2pt.png
-    ├── icon-30x2pt.png
+    ├── icon-20@2x.png
+    ├── icon-30@2x.png
     .
     .
     .
-    └── icon-40x2pt.png
+    └── icon-40@2x.png
 ```
 
 # Endpoints
-There are three endpoints. We will assume the app is running on port 8080.
+There are three endpoints. We will assume the app is running on port `8080`.
 
 ## `/`
 This serves the `index.html` page that has a simple upload file form.

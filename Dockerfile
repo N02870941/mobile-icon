@@ -1,8 +1,8 @@
 FROM node:8.7
 
-ADD ./src /app
+ADD ./src /src
 
-WORKDIR /app
+WORKDIR /src
 
 RUN apt-get update     && \
     apt-get -y install    \
@@ -11,4 +11,4 @@ RUN apt-get update     && \
 
 EXPOSE 80
 
-CMD node app.js
+CMD npm start

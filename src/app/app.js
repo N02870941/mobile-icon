@@ -14,8 +14,9 @@ const upload   = util.promisify(multer(storage).single('file'));
 //------------------------------------------------------------------------------
 
 app.set('views', template)
+app.use(body_parser.urlencoded({ extended: true }))
 app.use(body_parser.json())
-// app.use(body_parser.urlencoded({ extended: false }))
+app.use(express.json())
 app.use(express.static(template))
 app.post('/upload', ingress)
 app.listen(port)
@@ -23,19 +24,19 @@ app.listen(port)
 //------------------------------------------------------------------------------
 
 function ingress(req, res, next) {
-  console.log(req)
-
   upload(req, res)
-  .then(() => edit_icon(req.file, res))
+  .then(() => edit_icon(req, res))
   .catch((error) => upload_failed(error, res))
 }
 
 //------------------------------------------------------------------------------
 
-function edit_icon(file, res) {
+function edit_icon(req, res) {
+  const filename = req.body.filename ? `${req.body.filename}.zip` : 'icon.zip'
 
-  service.edit(file).then(zip => {
-    res.download(zip, 'icon.zip', error => {
+  service.edit(req.file).then(zip => {
+
+    res.download(zip, filename, error => {
       if (error)
         service.dispatcher.emit('error', error)
 
