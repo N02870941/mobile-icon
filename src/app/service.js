@@ -20,6 +20,8 @@ dispatcher.on('cleanup', () => {
 })
 
 dispatcher.on('error', (error) => {
+  dispatcher.emit('cleanup')
+
   console.error(error)
 })
 

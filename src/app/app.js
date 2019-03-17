@@ -38,26 +38,20 @@ function edit_icon(req, res, next) {
   service
   .edit(req.file)
   .then(zip => {
-
     res.download(zip, filename, error => {
       if (error)
         service.dispatcher.emit('error', error)
-
-      service.dispatcher.emit('cleanup')
+      else
+        service.dispatcher.emit('cleanup')
     })
   })
-  .catch(error => {
-    next(error)
-  })
+  .catch(next)
 }
 
 //------------------------------------------------------------------------------
 
 function log_error(error, req, res, next) {
   service.dispatcher.emit('error', error)
-  service.dispatcher.emit('cleanup')
-
-  console.error(error)
   next(error)
 }
 
@@ -65,12 +59,12 @@ function log_error(error, req, res, next) {
 
 function handle_client_error(error, req, res, next) {
   if (error instanceof commons.CustomError) {
-    const body = {
-      message : error.message,
-      code: 406
-    }
+    const status = 406
 
-    res.status(body.code).json(body)
+    res.status(body.code).json({
+      message : error.message,
+      code: status
+    })
 
   } else {
     next(error)
@@ -80,13 +74,13 @@ function handle_client_error(error, req, res, next) {
 //------------------------------------------------------------------------------
 
 function handle_internal_error(error, req, res, next) {
-  const body = {
+  const status = 500
+
+  res.status(status).json({
     message : 'An unknown error occured. Please report bug',
     url     : 'https://github.com/N02870941/mobile-icon/issues',
-    code    : 500
-  }
-
-  res.status(body.code).json(body)
+    code    : status
+  })
 }
 
 //------------------------------------------------------------------------------
