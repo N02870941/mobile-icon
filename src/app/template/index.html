@@ -6,14 +6,14 @@
 
     <!-- Stylesheets -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/load-awesome@1.1.0/css/ball-clip-rotate.min.css">
 
     <!-- Styling -->
     <style>
 
-      /* Center everything */
-      .container {
-        margin     : auto;
-        text-align : center;
+      .middle {
+        margin: auto;
+        text-align: center;
       }
 
       /* One form element per line */
@@ -29,6 +29,10 @@
         display: inline;
       }
 
+      .la-ball-clip-rotate {
+          color: #79bbb5;
+      }
+
       input {
         max-width  : 50%;
         box-sizing : border-box
@@ -40,7 +44,7 @@
   <body>
 
     <!-- Bootstrap container -->
-    <div id='container' class='container'>
+    <div id='container' class='container middle'>
 
       <!-- Header row  -->
       <div class='row'>
@@ -70,6 +74,12 @@
               <small id="file-hint" class="text-danger initially-hidden">
                 One file must be selected.
               </small>
+            </div>
+
+            <div id="spinner" class='form-group initially-hidden'>
+              <div class="la-ball-clip-rotate middle">
+                <div></div>
+              </div>
             </div>
 
             <!-- Submit button -->
@@ -141,6 +151,7 @@
         // https://stackoverflow.com/questions/17657184/using-jquerys-ajax-method-to-retrieve-images-as-a-blob
         $('#form').submit(function(event) {
           event.preventDefault()
+          showSpinner()
 
           const form = $(this)
           const data = new FormData(this)
@@ -195,12 +206,23 @@
             complete: function() {
               form.trigger('reset')
               form.trigger('change')
+              hideSpinner()
             },
             cached: false,
             contentType: false,
             processData: false
           })
         })
+
+        function showSpinner() {
+          const spinner = document.getElementById('spinner')
+          spinner.style.display = 'block'
+        }
+
+        function hideSpinner() {
+          const spinner = document.getElementById('spinner')
+          spinner.style.display = 'none'
+        }
 
       })
     </script>
