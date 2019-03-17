@@ -15,12 +15,6 @@ script:
 after_success:
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
   - docker build -t jabaridash/mobile-icon .
-  - |
-    docker run         \
-    -d                 \
-    --publish 8080:80  \
-    --name mobile-icon \
-    jabaridash/mobile-icon
   - docker push jabaridash/mobile-icon
 
 on:

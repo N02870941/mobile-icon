@@ -44,22 +44,27 @@ function edit(file) {
 async function modify(in_file, outdir, ext) {
   const results = []
   const zipdir  = `${outdir}.zip`
+  const org_dir = `${outdir}/original`
+  const ios_dir = `${outdir}/ios`
+  const and_dir = `${outdir}/android`
 
-  await exec(`mkdir -p ${outdir}/{ios,android,original}`)
+  await exec(`mkdir -p ${org_dir}`)
+  await exec(`mkdir -p ${ios_dir}`)
+  await exec(`mkdir -p ${and_dir}`)
 
-  results.push(exec(`cp ${in_file} ${outdir}/original/`))
+  results.push(exec(`cp ${in_file} ${org_dir}/`))
 
   for (pair of scales.ios) {
     results.push(convert([
       in_file,
       '-resize',
       `${pair.width}x${pair.width}`,
-      `${outdir}/ios/icon-${pair.width}@${pair.scale}x${ext}`
+      `${ios_dir}/icon-${pair.width}@${pair.scale}x${ext}`
     ]))
   }
 
   for (pair of scales.android) {
-    const directory = `${outdir}/android/${pair.dpi}`
+    const directory = `${and_dir}/${pair.dpi}`
 
     results.push(exec(`mkdir ${directory}`).then(() => {
       convert([
