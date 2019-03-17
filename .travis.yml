@@ -4,6 +4,9 @@ services:
   - docker
 
 script:
+  - cd src && npm install && npm test
+  
+after_success:
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
   - docker build -t jabaridash/mobile-icon .
   - |
@@ -12,12 +15,6 @@ script:
     --publish 8080:80  \
     --name mobile-icon \
     jabaridash/mobile-icon
-  - sleep 5
-  - docker ps -a
-  - cd src
-  - npm test
-
-after_success:
   - docker push jabaridash/mobile-icon
 
 on:
