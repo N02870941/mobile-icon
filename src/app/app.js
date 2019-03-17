@@ -1,4 +1,3 @@
-const port     = process.env.PORT || process.argv[2] || 80;
 const express  = require('express');
 const app      = express();
 const path     = require('path');
@@ -19,7 +18,6 @@ app.use(body_parser.json())
 app.use(express.json())
 app.use(express.static(template))
 app.post('/upload', ingress)
-app.listen(port)
 
 //------------------------------------------------------------------------------
 
@@ -66,3 +64,7 @@ function upload_failed(error, res) {
 
   res.status(body.code).json(body)
 }
+
+//------------------------------------------------------------------------------
+
+module.exports = app
