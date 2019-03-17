@@ -1,11 +1,11 @@
-const fs     = require('fs');
-const util   = require('util');
-const multer = require('multer');
-const crypto = require('crypto');
-const path   = require('path');
-const shell  = require('shelljs');
-const errors = require('./error');
-const exec   = util.promisify(require('child_process').exec);
+const fs      = require('fs')
+const util    = require('util')
+const multer  = require('multer')
+const crypto  = require('crypto')
+const path    = require('path')
+const shell   = require('shelljs')
+const commons = require('./commons')
+const exec    = util.promisify(require('child_process').exec)
 
 //------------------------------------------------------------------------------
 
@@ -32,11 +32,11 @@ function removeExtension(filename) {
 // http://www.riptutorial.com/node-js/example/14210/single-file-upload-using-multer
 const storage = multer.diskStorage({
   destination: (req, file, callback) => {
-    let name  = removeExtension(file.originalname)
-    let ext   = path.extname(file.originalname)
-    let date  = Date.now()
-    let token = crypto.randomBytes(16).toString('hex')
-    let dir   = path.join(__dirname, 'temp', 'uploads', token)
+    const name  = removeExtension(file.originalname)
+    const ext   = path.extname(file.originalname)
+    const date  = Date.now()
+    const token = crypto.randomBytes(16).toString('hex')
+    const dir   = path.join(__dirname, 'temp', 'uploads', token)
 
     if (!fs.existsSync(dir))
       shell.mkdir('-p', dir)
@@ -55,12 +55,12 @@ const storage = multer.diskStorage({
 //------------------------------------------------------------------------------
 
 const fileFilter = (req, file, callback) => {
-  let ext = path.extname(file.originalname);
+  const ext = path.extname(file.originalname);
 
   // TODO - Search through type array instead
 
   if (ext !== '.png' && ext !== '.jpg' && ext !== '.jpeg')
-    return callback(new errors.InvalidFileError('Only PNG and JPG images are allowed'))
+    return callback(new commons.InvalidFileError(`Invalid file type. Please ensure the file is of one of the following types: ${types}`))
   else
     callback(null, true);
 };

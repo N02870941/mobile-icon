@@ -21,7 +21,10 @@
         display:block;
       }
 
-      /*  */
+      .initially-hidden {
+        display: none;
+      }
+
       input {
         max-width  : 50%;
         box-sizing : border-box
@@ -51,18 +54,17 @@
             Upload a file and a zip file of the exported icons will be returned.
           </p>
 
-          <!-- TODO - Checkbox to keep file original name -->
-          <!-- TODO - If unchecked, input field for new file name -->
-          <!-- TODO - Only allow submit if one of the two is completed -->
-          <!-- TODO - Fix </input> field length -->
-
           <!-- Form to upload file -->
-          <form id="form" action="/upload" enctype="multipart/form-data" method="post">
+          <form id="data" action="/upload" enctype="multipart/form-data" method="post">
 
             <!-- Input to select file -->
             <label class="form-element">
               <input type="file" name="file" accept="image/*" class="btn btn-outline-info">
             </label>
+
+            <!-- TODO - Add a checkbox that lets the user keep file's original name -->
+            <!-- If that checkbox is unchecked, a new input field will appear that allowss -->
+            <!-- the user to specify the name of the file.  -->
 
             <!-- Submit button -->
             <label class="form-element">
@@ -77,7 +79,7 @@
       <div class='row'>
         <div class="col-sm">
           <p id="author-paragraph" class="paragraph">
-            By Jabari Dash, code found on <a class="link" href="" target="_blank">GitHub.</a>
+            By Jabari Dash, source code available on <a class="link" href="https://github.com/N02870941/mobile-icon" target="_blank">GitHub.</a>
           </p>
         </div>
       </div>
@@ -89,5 +91,10 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
     <script src="http://malsup.github.io/min/jquery.form.min.js"></script>
+
+    <script>
+      // TODO - Add logic here to enable and disable the upload button depending
+      // on whether or not the user has selected a file. https://stackoverflow.com/questions/25793880/how-to-check-if-input-file-is-empty-in-jquery
+    </script>
   </body>
 </html>
