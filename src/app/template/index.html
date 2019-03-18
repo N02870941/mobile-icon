@@ -4,39 +4,10 @@
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/load-awesome@1.1.0/css/ball-clip-rotate.min.css">
-
-    <style>
-      .middle {
-        margin: auto;
-        text-align: center;
-      }
-
-      .form-element {
-        display:block;
-      }
-
-      .initially-hidden {
-        display: none;
-      }
-
-      .centered-input {
-        display: inline;
-      }
-
-      .la-ball-clip-rotate {
-          color: #79bbb5;
-      }
-
-      input {
-        max-width  : 50%;
-        box-sizing : border-box;
-      }
-
-    </style>
+    <link rel="stylesheet" href="style.css">
   </head>
 
   <body>
-
     <!-- Bootstrap container -->
     <div id='container' class='container middle'>
 
@@ -128,97 +99,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
     <script src="http://malsup.github.io/min/jquery.form.min.js"></script>
-
-    <script>
-      $(document).ready(function() {
-
-        $('#form').on('keyup change paste', function() {
-          const file   = document.getElementById('file')
-          const submit = document.getElementById('submit-button')
-
-          submit.disabled = file.files.length != 1
-        })
-
-        // https://stackoverflow.com/questions/34586671/download-pdf-file-using-jquery-ajax
-        // https://stackoverflow.com/questions/10899384/uploading-both-data-and-files-in-one-form-using-ajax
-        // https://stackoverflow.com/questions/10529476/javascript-window-url-is-undefined-in-function
-        // https://stackoverflow.com/questions/17657184/using-jquerys-ajax-method-to-retrieve-images-as-a-blob
-        $('#form').submit(function(event) {
-          event.preventDefault()
-          showSpinner()
-
-          const form = $(this)
-          const data = new FormData(this)
-
-          $.ajax({
-            type: 'POST',
-            url: '/upload',
-            enctype: "multipart/form-data",
-            data: data,
-            xhrFields: {
-              responseType: 'blob'
-            },
-            xhr: function() {
-              let xhr = new XMLHttpRequest()
-
-              xhr.onreadystatechange = function() {
-                  if (xhr.readyState == 2) {
-                      if(xhr.status == 200) {
-                          xhr.responseType = "blob";
-                      } else {
-                          xhr.responseType = "text";
-                      }
-                  }
-              }
-
-              return xhr
-            },
-            success: function(blob) {
-              const url     = window.URL || window.webkitURL
-              const link    = document.createElement('a')
-              link.href     = url.createObjectURL(blob)
-              link.download = 'icon.zip'
-
-              document.body.appendChild(link)
-              link.click()
-            },
-            error: function(xhr, status, error) {
-              const message = document.getElementById('error-msg')
-              const url     = document.getElementById('error-url')
-              const res     = JSON.parse(xhr.responseText)
-
-              message.innerHTML = res.message
-
-              if (res.url) {
-                url.href = res.url
-                url.setAttribute('target', '_blank')
-                url.style.display = 'inline'
-              }
-
-              $("#modal").modal()
-            },
-            complete: function() {
-              form.trigger('reset')
-              form.trigger('change')
-              hideSpinner()
-            },
-            cached: false,
-            contentType: false,
-            processData: false
-          })
-        })
-
-        function showSpinner() {
-          const spinner = document.getElementById('spinner')
-          spinner.style.display = 'block'
-        }
-
-        function hideSpinner() {
-          const spinner = document.getElementById('spinner')
-          spinner.style.display = 'none'
-        }
-
-      })
-    </script>
+    <script src="script.js"></script>
   </body>
 </html>
