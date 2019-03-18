@@ -4,8 +4,11 @@ const multer  = require('multer')
 const crypto  = require('crypto')
 const path    = require('path')
 const shell   = require('shelljs')
+const moment  = require('moment')
 const commons = require('./commons')
+const cron    = require('cron')
 const exec    = util.promisify(require('child_process').exec)
+const temp_files  = []
 
 //------------------------------------------------------------------------------
 
@@ -14,6 +17,49 @@ const types = [
   '.pjpeg',
   '.png'
 ];
+
+//------------------------------------------------------------------------------
+
+// Clean up old files every N minutes
+cron.job('*/1 * * * *', cleanup)
+    .start()
+
+//------------------------------------------------------------------------------
+
+function cleanup() {
+  const now   = new Date()
+  const files = []
+
+  let i = temp_files.length
+
+  while(i--) {
+    let file = temp_files[i]
+
+    if (file.expiration < now) {
+      files.push(file.name)
+      temp_files.splice(i, 1)
+    }
+  }
+
+  const command = `rm -rf ${files.join(' ')}`
+
+  exec(command).catch(error => dispatcher.emit('error', error))
+}
+
+async function mark_for_deletion() {
+  const now        = new Date()
+  const expiration = moment(now).add(1, 'm')
+                                .toDate()
+
+  for (let i = 0; i < arguments.length; i++) {
+    let file = arguments[i]
+
+    temp_files.push({
+      name: file,
+      expiration: expiration
+    })
+  }
+}
 
 //------------------------------------------------------------------------------
 
@@ -37,6 +83,8 @@ const storage = multer.diskStorage({
     const date  = Date.now()
     const token = crypto.randomBytes(16).toString('hex')
     const dir   = path.join(__dirname, 'temp', 'uploads', token)
+
+    mark_for_deletion(dir)
 
     if (!fs.existsSync(dir))
       shell.mkdir('-p', dir)
@@ -78,5 +126,7 @@ module.exports = {
   types,
   storage,
   // limits,
-  fileFilter
+  fileFilter,
+  cleanup,
+  mark_for_deletion
 };

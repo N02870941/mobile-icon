@@ -4,26 +4,13 @@ const archiver    = require('archiver')
 const imagemagick = require('imagemagick')
 const scales      = require('./template/scale.json')
 const commons     = require('./commons')
-const path        = require('path');
-const crypto      = require('crypto');
+const path        = require('path')
+const crypto      = require('crypto')
+const shell       = require('shelljs')
+const http_context = require('express-http-context')
+const storage     = require('./storage')
 const exec        = util.promisify(require('child_process').exec)
-const temp_files  = []
-
-//------------------------------------------------------------------------------
-
-const dispatcher = new commons.EventDispatcher()
-
-dispatcher.on('cleanup', () => {
-
-  exec(`rm -rf ${temp_files.join(' ')}`)
-  .catch(error => dispatcher.emit('error', error))
-})
-
-dispatcher.on('error', (error) => {
-  dispatcher.emit('cleanup')
-
-  console.error(error)
-})
+const dispatcher  = commons.dispatcher
 
 //------------------------------------------------------------------------------
 
@@ -32,11 +19,13 @@ function edit(file) {
     throw new commons.EmptyUploadError('No file was uploaded. Please upload a file before submitting form.')
 
   const hash    = crypto.randomBytes(16).toString('hex');
-  const out_dir = `temp-icon-${hash}`;
+  const out_dir = path.join(__dirname, 'temp', 'downloads', hash)
   const ext     = path.extname(file.originalname);
 
-  temp_files.push(file.destination)
-  temp_files.push(out_dir)
+  storage.mark_for_deletion(
+    file.destination,
+    out_dir
+  )
 
   return modify(file.path, out_dir, ext)
 }
@@ -46,44 +35,73 @@ function edit(file) {
 async function modify(in_file, outdir, ext) {
   const results = []
   const zipdir  = `${outdir}.zip`
-  const org_dir = `${outdir}/original`
   const ios_dir = `${outdir}/ios`
   const and_dir = `${outdir}/android`
 
-  await exec(`mkdir -p ${org_dir}`)
-  await exec(`mkdir -p ${ios_dir}`)
-  await exec(`mkdir -p ${and_dir}`)
+  const dirs = scales.android
+  .map(pair => `${and_dir}/${pair.dpi}`)
+  .concat([
+    ios_dir
+  ])
 
-  results.push(exec(`cp ${in_file} ${org_dir}/`))
+  await create_directories(dirs)
 
-  for (pair of scales.ios) {
+  const promises = [
+    create_ios_assets(in_file, ext, ios_dir),
+    create_android_assets(in_file, ext, and_dir)
+  ]
+
+  await Promise.all(promises)
+               .then(() => zip(outdir, zipdir))
+
+  return zipdir
+}
+
+//------------------------------------------------------------------------------
+
+async function create_directories(dirs) {
+
+  return dirs.map(directory => {
+    exec(`mkdir -p ${directory}`)
+  })
+}
+
+//------------------------------------------------------------------------------
+
+function create_ios_assets(file, ext, dir) {
+  const results = []
+
+  for (const pair of scales.ios) {
+    const promise = convert([
+      file,
+      '-resize',
+      `${pair.width}x${pair.width}`,
+      `${dir}/icon-${pair.width}@${pair.scale}x${ext}`
+    ])
+
+    results.push(promise)
+  }
+
+  return Promise.all(results)
+}
+
+//------------------------------------------------------------------------------
+
+function create_android_assets(in_file, ext, and_dir) {
+  const results = []
+
+  for (const pair of scales.android) {
+    const directory = `${and_dir}/${pair.dpi}`
+
     results.push(convert([
       in_file,
       '-resize',
       `${pair.width}x${pair.width}`,
-      `${ios_dir}/icon-${pair.width}@${pair.scale}x${ext}`
+      `${directory}/icon-${ext}`
     ]))
   }
 
-  for (pair of scales.android) {
-    const directory = `${and_dir}/${pair.dpi}`
-
-    results.push(exec(`mkdir ${directory}`).then(() => {
-      convert([
-        in_file,
-        '-resize',
-        `${pair.width}x${pair.width}`,
-        `${directory}/icon${ext}`
-      ])
-    }))
-  }
-
-  await Promise.all(results)
-               .then(() => zip(outdir, zipdir))
-
-  temp_files.push(zipdir)
-
-  return zipdir
+  return Promise.all(results)
 }
 
 //------------------------------------------------------------------------------
@@ -102,6 +120,8 @@ function convert(options) {
 
 // https://stackoverflow.com/questions/15641243/need-to-zip-an-entire-directory-using-node-js
 function zip(source, out) {
+  storage.mark_for_deletion(out)
+
   const archive = archiver('zip', { zlib: { level: 9 }})
   const stream  = fs.createWriteStream(out)
 
