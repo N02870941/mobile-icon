@@ -97,7 +97,7 @@ function create_android_assets(in_file, ext, and_dir) {
       in_file,
       '-resize',
       `${pair.width}x${pair.width}`,
-      `${directory}/icon-${ext}`
+      `${directory}/icon${ext}`
     ]))
   }
 
