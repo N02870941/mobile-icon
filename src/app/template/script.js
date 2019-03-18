@@ -1,5 +1,44 @@
 $(document).ready(function() {
 
+  $.getJSON('scale.json', {
+    format: "json"
+  })
+  .done(json => {
+    let iosHTML = ''
+    let andHTML = ''
+
+    json.ios.forEach(pair => {
+      const width = pair.width
+      const scale = pair.scale
+      const pixels = width * scale
+
+      iosHTML += `
+        <tr>
+          <td>${width}x${width}</td>
+          <td>${scale}</td>
+          <td>${pixels}x${pixels}</td>
+        </tr>
+      `
+    })
+
+    json.android.forEach(pair => {
+      andHTML += `
+        <tr>
+          <td>${pair.dpi}</td>
+          <td>${pair.width}x${pair.width}</td>
+        </tr>
+      `
+    })
+
+    $('#ios-table').append(iosHTML)
+    $('#android-table').append(andHTML)
+
+    document
+    .getElementById('scales-info-div')
+    .style
+    .display = 'block'
+  })
+
   $('#form').on('keyup change paste', function() {
     const file   = document.getElementById('file')
     const submit = document.getElementById('submit-button')

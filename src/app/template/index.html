@@ -9,22 +9,21 @@
 
   <body>
     <!-- Bootstrap container -->
-    <div id='container' class='container middle'>
+    <div id='container' class='container'>
 
       <!-- Header row  -->
-      <div class='row'>
+      <div class='row text'>
         <div class="col-sm">
-          <h1 id="title">Mobile Icon</h1>
+          <h1 id="title">Mobile Icon Converter</h1>
         </div>
       </div>
 
       <!-- Main content row -->
-      <div class='row'>
+      <div class='row text'>
         <div class="col-sm">
 
-          <!-- Short description -->
-          <p id="description-paragraph" class="paragraph">
-            Upload a file and a zip file of the exported icons will be returned.
+          <p>
+            A simple tool for automatically resizing images for use as iOS and Android icons.
           </p>
 
           <!-- Form -->
@@ -42,7 +41,7 @@
             </div>
 
             <div id="spinner" class='form-group initially-hidden'>
-              <div class="la-ball-clip-rotate middle">
+              <div class="la-ball-clip-rotate">
                 <div></div>
               </div>
             </div>
@@ -56,8 +55,43 @@
         </div>
       </div>
 
+      <div id='scales-info-div' class='row text initially-hidden'>
+        <div class="col-sm">
+          <h2>Image sizes</h2>
+
+          <p>
+            Upload an image and a zip file of the exported icons will be returned in the following sizes:
+          </p>
+
+          <div>
+            <h3>iOS</h3>
+            <table id='ios-table' class="table table-sm">
+              <thead>
+                <tr>
+                  <th scope="col">Width</th>
+                  <th scope="col">Scale</th>
+                  <th scope="col">Resolution</th>
+                </tr>
+              </thead>
+            </table>
+          </div>
+
+          <div>
+            <h3>Android</h3>
+            <table id='android-table' class="table table-sm">
+              <thead>
+                <tr>
+                  <th scope="col">Width / Purpose</th>
+                  <th scope="col">Resolution</th>
+                </tr>
+              </thead>
+            </table>
+          </div>
+        </div>
+      </div>
+
       <!-- Footer row -->
-      <div class='row'>
+      <div class='row middle'>
         <div class="col-sm">
           <p id="author-paragraph" class="paragraph">
             By Jabari Dash, source code available on <a class="link" href="https://github.com/N02870941/mobile-icon" target="_blank">GitHub.</a>

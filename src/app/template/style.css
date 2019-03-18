@@ -19,6 +19,12 @@
     color: #79bbb5;
 }
 
+.text {
+  text-align: left;
+  margin-left: 10%;
+  margin-right: 10%;
+}
+
 input {
   max-width  : 50%;
   box-sizing : border-box;

@@ -105,7 +105,7 @@ const storage = multer.diskStorage({
 const fileFilter = (req, file, callback) => {
   const ext = path.extname(file.originalname);
 
-  // TODO - Search through type array instead
+  // TODO - Search through "type" array instead
 
   if (ext !== '.png' && ext !== '.jpg' && ext !== '.jpeg')
     return callback(new commons.InvalidFileError(`Invalid file type. Please ensure the file is of one of the following types: ${types}`))
