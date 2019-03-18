@@ -46,6 +46,8 @@ function cleanup() {
   exec(command).catch(error => dispatcher.emit('error', error))
 }
 
+//------------------------------------------------------------------------------
+
 async function mark_for_deletion() {
   const now        = new Date()
   const expiration = moment(now).add(1, 'm')
