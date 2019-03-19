@@ -81,4 +81,4 @@ function send(res, payload) {
 
 //------------------------------------------------------------------------------
 
-module.exports = app
+exports.app = app

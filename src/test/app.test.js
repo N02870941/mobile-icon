@@ -1,4 +1,4 @@
-const app = require('../app/app')
+const app = require('../app/app').app
 const request = require('supertest');
 
 // https://codewithhugo.com/testing-an-express-app-with-supertest-moxios-and-jest/
