@@ -16,12 +16,12 @@ const types = [
   '.jpeg',
   '.pjpeg',
   '.png'
-];
+]
 
 //------------------------------------------------------------------------------
 
 // Clean up old files every N minutes
-cron.job('*/1 * * * *', cleanup)
+cron.job('*/5 * * * *', cleanup)
     .start()
 
 //------------------------------------------------------------------------------
@@ -100,12 +100,12 @@ const storage = multer.diskStorage({
     if (typeof callback === 'function')
       callback(null, file.originalname)
   }
-});
+})
 
 //------------------------------------------------------------------------------
 
 const fileFilter = (req, file, callback) => {
-  const ext = path.extname(file.originalname);
+  const ext = path.extname(file.originalname)
 
   // TODO - Search through "type" array instead
 
@@ -113,22 +113,23 @@ const fileFilter = (req, file, callback) => {
     return callback(new commons.InvalidFileError(`Invalid file type. Please ensure the file is of one of the following types: ${types}`))
   else
     callback(null, true);
-};
+}
 
 //------------------------------------------------------------------------------
 
 const limits = {
 
-  fileSize: 1024 * 1024
-};
+  // 2mb
+  fileSize: 2097152
+}
 
 //------------------------------------------------------------------------------
 
 module.exports = {
   types,
   storage,
-  // limits,
+  limits,
   fileFilter,
   cleanup,
   mark_for_deletion
-};
+}
