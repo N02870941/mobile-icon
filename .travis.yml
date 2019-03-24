@@ -1,3 +1,7 @@
+language: node_js
+node_js:
+  - "10.1"
+
 sudo: required
 
 services:
@@ -7,9 +11,11 @@ cache:
   directories:
     - src/node_modules
 
-script:
+before_script:
   - cd src
   - npm install
+
+script:
   - npm test
 
 after_success:
