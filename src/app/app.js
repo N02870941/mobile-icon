@@ -15,7 +15,7 @@ const dispatcher     = commons.dispatcher
 const gui_sentry_dsn = process.env.GUI_SENTRY_DSN
 const api_sentry_dsn = process.env.API_SENTRY_DSN
 
-assert_dsn_declared()
+// assert_dsn_declared()
 
 Sentry.init({ dsn: api_sentry_dsn });
 

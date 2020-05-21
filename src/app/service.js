@@ -75,7 +75,7 @@ function create_ios_assets(file, ext, dir) {
     const promise = convert([
       file,
       '-resize',
-      `${pair.width}x${pair.width}`,
+      `${pair.width * pair.scale}x${pair.width * pair.scale}`,
       `${dir}/icon-${pair.width}@${pair.scale}x${ext}`
     ])
 
