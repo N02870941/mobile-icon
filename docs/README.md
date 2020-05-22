@@ -44,7 +44,7 @@ There are three endpoints. We will assume the app is running on port `8080`.
 This serves the `index.html` page that has a simple upload file form.
 
 ```
-curl localhost:8080
+curl localhost
 ```
 
 ## `/upload`
