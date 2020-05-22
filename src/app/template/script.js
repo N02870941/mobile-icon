@@ -116,8 +116,7 @@ $(document).ready(function() {
     spinner.style.display = 'none'
   }
 
-  // Manual XHR override that intercepts
-  // response and choses to interpret response as
+  // Manual XHR override that intercepts response and choses to interpret response as
   // a blob (file) if it succeeds or as text if it fails
   function onXHR() {
     let xhr = new XMLHttpRequest()
@@ -165,8 +164,7 @@ $(document).ready(function() {
     showModal()
   }
 
-  // Callback after form submission is complete.
-  // Executes whether submit succeeds or fails.
+  // Callback after form submission is complete. Executes whether submit succeeds or fails.
   function onComplete() {
     const form = $("#form")
 

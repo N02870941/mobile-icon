@@ -6,6 +6,7 @@ class EmptyUploadError     extends CustomError {}
 class CleanupError         extends CustomError {}
 class InvalidFileError     extends CustomError {}
 class ImageProcessingError extends CustomError {}
+class InvalidImageError    extends CustomError {}
 class EventDispatcher      extends Events {}
 
 const upload_dir   = path.join(__dirname, 'temp', 'uploads')
@@ -32,6 +33,7 @@ module.exports = {
   CleanupError,
   InvalidFileError,
   ImageProcessingError,
+  InvalidImageError,
   EventDispatcher,
   directory : {
     upload_dir,

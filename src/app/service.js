@@ -1,16 +1,17 @@
-const fs          = require('fs')
-const util        = require('util')
-const archiver    = require('archiver')
-const imagemagick = require('imagemagick')
-const scales      = require('./template/scale.json')
-const commons     = require('./commons')
-const path        = require('path')
-const crypto      = require('crypto')
-const shell       = require('shelljs')
+const fs           = require('fs')
+const util         = require('util')
+const archiver     = require('archiver')
+const imagemagick  = require('imagemagick')
+const scales       = require('./template/scale.json')
+const commons      = require('./commons')
+const path         = require('path')
+const crypto       = require('crypto')
+const shell        = require('shelljs')
 const http_context = require('express-http-context')
-const storage     = require('./storage')
-const exec        = util.promisify(require('child_process').exec)
-const dispatcher  = commons.dispatcher
+const size_of      = util.promisify(require('image-size'))
+const storage      = require('./storage')
+const exec         = util.promisify(require('child_process').exec)
+const dispatcher   = commons.dispatcher
 
 //------------------------------------------------------------------------------
 
@@ -32,6 +33,20 @@ function edit(file) {
 
 //------------------------------------------------------------------------------
 
+async function validate(image) {
+  return size_of(image).then(dimensions => {
+    console.log(`image: ${image}`)
+    console.log(`width: ${dimensions.width}\nheight: ${dimensions.height}`)
+
+    if (dimensions.width != dimensions.height) {
+      const message = `Image is not square. Resolution: ${dimensions.width}x${dimensions.height}`
+      throw new commons.InvalidImageError(message)
+    }
+  })
+}
+
+//------------------------------------------------------------------------------
+
 async function modify(in_file, outdir, ext) {
   const results = []
   const zipdir  = `${outdir}.zip`
@@ -40,10 +55,9 @@ async function modify(in_file, outdir, ext) {
 
   const dirs = scales.android
   .map(pair => `${and_dir}/${pair.dpi}`)
-  .concat([
-    ios_dir
-  ])
+  .concat([ios_dir])
 
+  await validate(in_file)
   await create_directories(dirs)
 
   const promises = [
@@ -60,7 +74,6 @@ async function modify(in_file, outdir, ext) {
 //------------------------------------------------------------------------------
 
 async function create_directories(dirs) {
-
   return dirs.map(directory => {
     exec(`mkdir -p ${directory}`)
   })
