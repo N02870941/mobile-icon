@@ -7,6 +7,37 @@ image resized to all of the required sizes for Android and iOS application compl
 
 # How to use
 
+Install the following dependencies:
+
+- `brew install imagemagick` on Mac or `apt-get install imagemagick` on Linux
+- `zip` (comes with macOS by default) or `apt-get install zip` on Linux
+
+Run the app on port 80 like follows:
+
+```bash
+git clone https://github.com/N02870941/mobile-icon.git
+cd mobile-icon
+npm install
+npm start
+```
+
+If port 80 is already in use, you can set the environment variable `PORT` to the port number that
+you wish to run the application on:
+
+```bash
+export PORT=8080
+```
+
+You can also run the node script passing the desired port as the first argument:
+
+```bash
+node app/server 80
+```
+
+It is worth noting that the environment variable `PORT` takes precedence. If that variable is not set,
+then the first command line argument argument will be used. If no argument is passed, the application
+will default to running on port 80.
+
 The application has one function. You navigate to the homepage, upload an image an a zip
 file called `icon.zip` will be returned. Once unzipped, the directory is structured as follows:
 
@@ -53,7 +84,7 @@ as the body. This endpoint is used by the form in the `index.html`. It can be
 used directly as a service via a REST call.
 
 ```
-curl -F "file=@icon.jpeg" localhost:8080/upload --fail -o icon.zip
+curl -F "file=@icon.jpeg" localhost/upload --fail -o icon.zip
 ```
 
 You may also find this documentation on [GitHub Pages](https://n02870941.github.io/mobile-icon/).
