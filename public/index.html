@@ -1,0 +1,193 @@
+<html>
+  <head>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-136538649-1"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'UA-136538649-1');
+    </script>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/load-awesome@1.1.0/css/ball-clip-rotate.min.css">
+    <link rel="stylesheet" href="style.css">
+  </head>
+
+  <body>
+    <!-- Bootstrap container -->
+    <div id='container' class='container'>
+
+      <!-- Header row  -->
+      <div class='row text'>
+        <div class="col-sm">
+          <h1 id="title">Mobile Icon Converter</h1>
+        </div>
+      </div>
+
+      <!-- Main content row -->
+      <div class='row text'>
+        <div class="col-sm">
+
+          <p>
+            Are you a designer or a developer that is tired of manually resizing your assets not only
+            for different screen sizes, but also for different platforms? Or are you simply new to app
+            development and you want your first app to show off your shiny new icon without you having to
+             buy photoshop or spend all day resizing your icon on the command line?
+          </p>
+
+          <p>
+            Either case, you came to the right place! Mobile Icon Converter is a simple tool for
+            automatically resizing images for use on iOS and Android devices.
+          </p>
+
+          <!-- Form -->
+          <form id="form">
+
+            <!-- Input to select file -->
+            <div class="form-group">
+              <label class="form-element">
+                <input
+                id="file"
+                type="file"
+                name="image"
+                accept="image/*"
+                class="btn btn-outline-info"
+                >
+              </label>
+
+              <small id="file-hint" class="text-danger initially-hidden">
+                One file must be selected.
+              </small>
+            </div>
+
+            <div id="spinner" class='form-group initially-hidden'>
+              <div class="la-ball-clip-rotate">
+                <div></div>
+              </div>
+            </div>
+
+            <!-- Submit button -->
+            <div class="form-group">
+              <button id="submit-button" type="submit" class="btn btn-primary" disabled>Upload</button>
+            </div>
+
+          </form>
+
+          <p>
+             Attach your original image, hit the "Upload" button, and you will recieve a zipped folder of all the
+             properly resized and named assets all ready to go.
+          </p>
+
+          <p>
+            After you have downloaded your assets, unzip it, and copy the icons into your app directory and your app
+            will be looking great on all screens in no time!
+          </p>
+        </div>
+      </div>
+
+      <div id='scales-info-div' class='row text initially-hidden'>
+        <div class="col-sm">
+          <h2>Genereal guidelines</h2>
+
+          <p>
+            The image that you upload should follow the following guidelines:
+          </p>
+
+          <ul>
+            <li>File size no greater than 2mb (for now)</li>
+            <li>Image should be square (width is equal to height)</li>
+          </ul>
+
+          <div>
+            <h2>iOS guidelines</h2>
+
+            <p>
+              Xcode will require that your assets have the following sizes. All of the icons will be in the
+              same directory, and you can copy all of them directly into your Assets as is.
+            </p>
+
+            <table id='ios-table' class="table table-sm">
+              <thead>
+                <tr>
+                  <th scope="col">Width</th>
+                  <th scope="col">Scale</th>
+                  <th scope="col">Resolution</th>
+                </tr>
+              </thead>
+            </table>
+
+            <p>If you would like more information on iOS icons, see the <a target="_blank" href="https://developer.apple.com/design/human-interface-guidelines/ios/icons-and-images/app-icon/">iOS Human Interface Guidelines.</a></p>
+          </div>
+
+          <div>
+            <h2>Android guidelines</h2>
+
+            <p>
+              Android works a little different from iOS. Android will be expecting all assets (independent of size)
+              to have the exact same name. Different asset sizes will be seperated by <strong>folder</strong> where the
+              name of the folder indicates the size of the asset. For example, if an asset is named icon.png, for devices
+              that fall under the xxxhdpi category, we will expect the 192x192 version of icon.png to be in the xxhdpi/
+              directory.
+            </p>
+
+            <table id='android-table' class="table table-sm">
+              <thead>
+                <tr>
+                  <th scope="col">Width / Purpose</th>
+                  <th scope="col">Resolution</th>
+                </tr>
+              </thead>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer row -->
+      <div class='row middle'>
+        <div class="col-sm">
+          <p id="author-paragraph" class="paragraph">
+            By Jabari Dash, source code available and open to contributions on <a class="link" href="https://github.com/N02870941/mobile-icon" target="_blank">GitHub!</a>
+          </p>
+        </div>
+      </div>
+
+      <!-- The Modal -->
+      <!-- https://www.w3schools.com/bootstrap4/bootstrap_modal.asp -->
+      <div class="modal fade" id="modal">
+        <div class="modal-dialog">
+          <div class="modal-content">
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+              <h4 id="error-title" class="modal-title"></h4>
+              <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+
+            <!-- Modal body -->
+            <div class="modal-body" id="modal-body">
+              <p id='error-msg'></p>
+              <a id='error-url' class='initially-hidden'>GitHub Issues Page</a>
+            </div>
+
+            <!-- Modal footer -->
+            <div class="modal-footer">
+              <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Dependencies -->
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <script src="http://malsup.github.io/min/jquery.form.min.js"></script>
+    <script src="script.js"></script>
+  </body>
+</html>
