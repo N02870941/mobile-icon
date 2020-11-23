@@ -16,8 +16,9 @@ jobs:
       - name: Install Function Dependencies
         run: |
           npm install
-          rm -rf node_modules/sharp
-          npm install --arch=x64 --platform=linux sharp
+          npm rebuild
+          # rm -rf node_modules/sharp
+          # npm install --arch=x64 --platform=linux sharp
         working-directory: ./functions
 
       # - name: Test Functions
