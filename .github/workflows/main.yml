@@ -8,17 +8,18 @@ on:
 jobs:
   build:
     name: Build , Test, and Deploy
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     steps:
       - name: Checkout Repository
         uses: actions/checkout@main
 
       - name: Install Function Dependencies
+        working-directory: ./functions
         run: |
           npm install
           rm -rf node_modules/sharp
           npm install --arch=x64 --platform=linux --build-from-source sharp
-        working-directory: ./functions
+
 
       # - name: Test Functions
       #   run: npm test
