@@ -1,8 +1,9 @@
 const express = require('express')
-const upload = require('../../middleware/upload')
 const resize = require('../../middleware/resize')
+const setup = require('../../middleware/setup')
+const upload = require('../../middleware/upload')
 const router = express.Router()
 
-router.post('/upload', upload, resize)
+router.post('/upload', upload, setup, resize)
 
 module.exports = router

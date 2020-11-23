@@ -5,7 +5,7 @@ const sharp = require('sharp')
 const util = require('util')
 const exec = util.promisify(require('child_process').exec)
 
-async function mkdirs(directories) {
+async function mkdir(directories) {
   return exec(`mkdir -p ${directories.join(" ")}`)
 }
 
@@ -19,6 +19,24 @@ async function resize(image) {
   .toFile(image.out_file)
 }
 
+function get_ios_image(image, scale, root) {
+  return {
+    directory: `${root}/ios`,
+    out_file: `${root}/ios/${image.originalname}-${scale.width}@${scale.scale}.${image.extension}`,
+    in_file: image.path,
+    width: scale.width * scale.scale,
+  }
+}
+
+function get_android_image(image, scale, root) {
+  return {
+    directory: `${root}/android/${scale.dpi}`,
+    out_file: `${root}/android/${scale.dpi}/${image.originalname}`,
+    in_file: image.path,
+    width: scale.width,
+  }
+}
+
 async function edit(config) {
   const directory = `${os.tmpdir()}/icons`
 
@@ -26,32 +44,13 @@ async function edit(config) {
     const root = `${directory}/${image.originalname}-icons`
 
     const images = [
-      config.scales.ios.map(scale => {
-        const dir = `${root}/ios`
-
-        return {
-          directory: dir,
-          out_file: `${dir}/${image.originalname}-${scale.width}@${scale.scale}.${image.extension}`,
-          in_file: image.path,
-          width: scale.width * scale.scale,
-        }
-      }),
-
-      config.scales.android.map(scale => {
-        const dir = `${root}/android/${scale.dpi}`
-
-        return {
-          directory: dir,
-          out_file: `${dir}/${image.originalname}`,
-          in_file: image.path,
-          width: scale.width,
-        }
-      })
+      config.scales.ios.map(scale => get_ios_image(image, scale, root)),
+      config.scales.android.map(scale => get_android_image(image, scale, root)),
     ].flat()
 
     const directories = images.map(image => image.directory).concat(`${root}/original`)
 
-    await mkdirs(directories)
+    await mkdir(directories)
     await cp(image.path, `${root}/original/${image.originalname}`)
 
     return Promise.all(images.map(resize))
@@ -86,17 +85,19 @@ async function zip(source) {
   })
 }
 
+function cleanup(result) {
+  try {
+    fs.unlinkSync(result.destination)
+  } catch (error) {
+    console.error(error)
+  }
+}
+
 module.exports = (req, res, next) => {
   edit({ images: req.files, scales: req.scales })
   .then(zip)
   .then(result => {
-    res.on('finish', () => {
-        try {
-          fs.unlinkSync(result.destination)
-        } catch (error) {
-          console.error(error)
-        }
-    })
+    res.on('finish', () => cleanup(result))
 
     res.download(result.destination, next)
   })
