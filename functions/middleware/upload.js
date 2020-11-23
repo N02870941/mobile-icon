@@ -3,90 +3,70 @@ const os = require('os');
 const path = require('path');
 const fs = require('fs');
 
+const FILE_SIZE_LIMIT = 10 * 1024 * 1024
+
 // https://mikesukmanowsky.com/firebase-file-and-image-uploads/
+// https://cloud.google.com/functions/docs/writing/http#multipart_data
+
+function getBusBoy(headers) {
+  return new Busboy({
+    headers: headers,
+    limits: { fileSize: FILE_SIZE_LIMIT }
+  })
+}
 
 module.exports = (req, res, next) => {
-  // See https://cloud.google.com/functions/docs/writing/http#multipart_data
-  const busboy = new Busboy({
-    headers: req.headers,
-    limits: {
-      // Cloud functions impose this restriction anyway
-      fileSize: 10 * 1024 * 1024,
-    }
-  });
+  const busboy = getBusBoy(req.headers)
+  const fields = {}
+  const files = []
+  const fileWrites = []
+  const tmpdir = os.tmpdir()
 
-  const fields = {};
-  const files = [];
-  const fileWrites = [];
-
-  // Note: os.tmpdir() points to an in-memory file system on GCF
-  // Thus, any files in it must fit in the instance's memory.
-  const tmpdir = os.tmpdir();
-
-  busboy.on('field', (key, value) => {
-    // You could do additional deserialization logic here, values will just be
-    // strings
-    fields[key] = value;
-  });
+  busboy.on('field', (key, value) => fields[key] = value)
 
   busboy.on('file', (fieldname, file, filename, encoding, mimetype) => {
-    const filepath = path.join(tmpdir, filename);
 
-    console.log(`Handling file upload field ${fieldname}: ${filename} (${filepath})`);
+    // TODO - validate mimetype
 
-    const writeStream = fs.createWriteStream(filepath);
-    file.pipe(writeStream);
+    const filepath = path.join(tmpdir, filename)
+    const writeStream = fs.createWriteStream(filepath)
+
+    file.pipe(writeStream)
 
     fileWrites.push(new Promise((resolve, reject) => {
-      file.on('end', () => writeStream.end());
+      file.on('end', () => writeStream.end())
 
       writeStream.on('finish', () => {
         fs.readFile(filepath, (err, buffer) => {
-          const size = Buffer.byteLength(buffer);
-
-          console.log(`${filename} is ${size} bytes`);
+          const size = Buffer.byteLength(buffer)
 
           if (err) {
-            return reject(err);
+            return reject(err)
           }
 
           files.push({
             directory: tmpdir,
-            fieldname,
             originalname: filename,
             path: filepath,
-            encoding,
-            mimetype,
-            buffer,
-            size,
             extension: filename.substr(filename.lastIndexOf('.') + 1)
-          });
-
-          // CLEANUP
-          res.on('finish', () => {
-            try {
-              fs.unlinkSync(filepath)
-            } catch (error) {
-              console.error(error)
-            }
           })
 
-          resolve();
-        });
-      });
+          resolve()
+        })
+      })
 
-      writeStream.on('error', reject);
-    }));
-  });
+      writeStream.on('error', reject)
+    }))
+  })
 
   busboy.on('finish', () => {
     Promise.all(fileWrites).then(() => {
-      req.body = fields;
-      req.files = files;
-      next();
+      req.body = fields
+      req.files = files
+      next()
     })
-    .catch(next);
+    .catch(next)
   });
 
-  busboy.end(req.rawBody);
+  busboy.end(req.rawBody)
 }
