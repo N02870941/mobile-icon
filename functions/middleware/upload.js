@@ -5,7 +5,7 @@ const fs = require('fs');
 
 // https://mikesukmanowsky.com/firebase-file-and-image-uploads/
 
-function upload(req, res, next) {
+module.exports = (req, res, next) => {
   // See https://cloud.google.com/functions/docs/writing/http#multipart_data
   const busboy = new Busboy({
     headers: req.headers,
@@ -53,6 +53,7 @@ function upload(req, res, next) {
           files.push({
             fieldname,
             originalname: filename,
+            path: filepath,
             encoding,
             mimetype,
             buffer,
@@ -84,5 +85,3 @@ function upload(req, res, next) {
 
   busboy.end(req.rawBody);
 }
-
-module.exports = upload

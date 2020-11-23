@@ -1,6 +1,6 @@
 $(document).ready(function() {
   // Draw tables that show icon resolutions
-  fetch('http://localhost:5001/mobile-icon/us-central1/api/v1/scale')
+  fetch('http://localhost:5001/mobile-icon/us-central1/api/v1/scales')
   .then(response => response.json())
   .then(showTables)
 
@@ -9,7 +9,7 @@ $(document).ready(function() {
     const file   = document.getElementById('file')
     const submit = document.getElementById('submit-button')
 
-    submit.disabled = file.files.length != 1
+    submit.disabled = file.files.length < 1
   })
 
   // https://stackoverflow.com/questions/34586671/download-pdf-file-using-jquery-ajax

@@ -1,5 +1,5 @@
 module.exports = function(req, res, next) {
-  req.scale = {
+  req.scales = {
     ios: [
       {width: 20, scale: 1},
       {width: 20, scale: 2},
