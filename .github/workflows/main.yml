@@ -8,7 +8,7 @@ on:
 jobs:
   build:
     name: Build , Test, and Deploy
-    runs-on: macos-latest
+    runs-on: ubuntu-16.04
     steps:
       - name: Checkout Repository
         uses: actions/checkout@main
@@ -18,8 +18,7 @@ jobs:
         run: |
           npm install
           rm -rf node_modules/sharp
-          npm install --build-from-source sharp
-
+          npm install --arch=x64 --platform=linux --build-from-source sharp
 
       # - name: Test Functions
       #   run: npm test
