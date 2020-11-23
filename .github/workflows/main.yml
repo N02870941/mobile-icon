@@ -17,8 +17,7 @@ jobs:
         run: |
           npm install
           rm -rf node_modules/sharp
-          SHARP_IGNORE_GLOBAL_LIBVIPS=1
-          npm install --arch=x64 --platform=linux sharp
+          npm install --arch=x64 --platform=linux --build-from-source sharp
         working-directory: ./functions
 
       # - name: Test Functions
