@@ -14,11 +14,7 @@ jobs:
         uses: actions/checkout@main
 
       - name: Install Function Dependencies
-        run: |
-          npm install
-          npm rebuild
-          # rm -rf node_modules/sharp
-          # npm install --arch=x64 --platform=linux sharp
+        run: npm install --build-from-source
         working-directory: ./functions
 
       # - name: Test Functions
