@@ -1,63 +1,67 @@
 const archiver = require('archiver')
 const fs = require('fs')
+const os = require('os')
 const sharp = require('sharp')
 const util = require('util')
 const exec = util.promisify(require('child_process').exec)
 
-function resize_ios(image, sizes) {
-  return Promise.all(sizes.map(size => {
-    return Promise.resolve({
-      path: image.path,
-      file: null,
-      name: image.originalname,
-      size: size,
-    })
-  }))
+async function mkdirs(directories) {
+  return exec(`mkdir -p ${directories.join(" ")}`)
 }
 
-function resize_android(image, sizes) {
-  return Promise.all(sizes.map(size => {
-    return Promise.resolve({
-      path: image.path,
-      file: null,
-      name: image.originalname,
-      size: size,
-    })
-  }))
+async function cp(source, destination) {
+  return exec(`cp ${source} ${destination}`)
 }
 
-function resize(config) {
-  return Promise.all(config.images.map(image => {
-    return Promise.all([
-      resize_ios(image, config.scales.ios),
-      resize_android(image, config.scales.android),
-    ])
-    .then(values => values.flat())
-  }))
+async function resize(image) {
+  return sharp(image.in_file)
+  .resize(image.width, image.width)
+  .toFile(image.out_file)
 }
 
-function mkdirs(images, scales) {
-  return Promise.all(images.map(image => {
-    return Promise.resolve([
-      `${image.originalname}/ios`,
-      `${image.originalname}/android`,
-    ])
-  }))
-  .then(directories => {
-    return {
-      images,
-      scales,
-      directories,
-    }
+async function edit(config) {
+  const directory = `${os.tmpdir()}/icons`
+
+  const promises = config.images.map(async (image) => {
+    const root = `${directory}/${image.originalname}-icons`
+
+    const images = [
+      config.scales.ios.map(scale => {
+        const dir = `${root}/ios`
+
+        return {
+          directory: dir,
+          out_file: `${dir}/${image.originalname}-${scale.width}@${scale.scale}.${image.extension}`,
+          in_file: image.path,
+          width: scale.width * scale.scale,
+        }
+      }),
+
+      config.scales.android.map(scale => {
+        const dir = `${root}/android/${scale.dpi}`
+
+        return {
+          directory: dir,
+          out_file: `${dir}/${image.originalname}`,
+          in_file: image.path,
+          width: scale.width,
+        }
+      })
+    ].flat()
+
+    const directories = images.map(image => image.directory).concat(`${root}/original`)
+
+    await mkdirs(directories)
+    await cp(image.path, `${root}/original/${image.originalname}`)
+
+    return Promise.all(images.map(resize))
   })
+
+  return Promise.all(promises).then(() => directory)
 }
 
-function zip(images) {
-  console.log(images)
-
-  const source = "./uploads"
+async function zip(source) {
   const destination = `${source}.zip`
-
   const archive = archiver('zip', { zlib: { level: 9 }})
   const stream = fs.createWriteStream(destination)
 
@@ -66,14 +70,34 @@ function zip(images) {
     .on('error', reject)
     .pipe(stream)
 
-    stream.on('close', () => resolve(destination))
+    stream.on('close', () => {
+      exec(`rm -rf ${source}`).then(() => {
+        console.log("DELETED ICONS")
+      }).catch(error => {
+        return Promise.resolve("CAUGHT")
+      })
+
+      resolve({
+        source,
+        destination,
+      })
+    })
     archive.finalize()
   })
 }
 
 module.exports = (req, res, next) => {
-  mkdirs(req.files, req.scales)
-  .then(resize)
+  edit({ images: req.files, scales: req.scales })
   .then(zip)
-  .then(file => res.download(file, next))
+  .then(result => {
+    res.on('finish', () => {
+        try {
+          fs.unlinkSync(result.destination)
+        } catch (error) {
+          console.error(error)
+        }
+    })
+
+    res.download(result.destination, next)
+  })
 }

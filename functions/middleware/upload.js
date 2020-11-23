@@ -51,6 +51,7 @@ module.exports = (req, res, next) => {
           }
 
           files.push({
+            directory: tmpdir,
             fieldname,
             originalname: filename,
             path: filepath,
@@ -58,13 +59,17 @@ module.exports = (req, res, next) => {
             mimetype,
             buffer,
             size,
+            extension: filename.substr(filename.lastIndexOf('.') + 1)
           });
 
-          try {
-            fs.unlinkSync(filepath);
-          } catch (error) {
-            return reject(error);
-          }
+          // CLEANUP
+          res.on('finish', () => {
+            try {
+              fs.unlinkSync(filepath)
+            } catch (error) {
+              console.error(error)
+            }
+          })
 
           resolve();
         });
