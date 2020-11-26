@@ -3,7 +3,7 @@ import Row from 'react-bootstrap/Row'
 
 export default function AndroidGuidelines(props) {
   return (
-    <Row className="text">
+    <Row>
       <Col>
         <h2>Android guidelines</h2>
 

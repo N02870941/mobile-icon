@@ -4,13 +4,13 @@ import Row from 'react-bootstrap/Row'
 export default function Header() {
   return (
     <div>
-      <Row className="text">
+      <Row>
         <Col>
           <h1>Mobile Icon Converter</h1>
         </Col>
       </Row>
 
-      <Row className="text">
+      <Row>
         <Col>
           <p>
             Are you a designer or a developer that is tired of manually resizing your assets not only

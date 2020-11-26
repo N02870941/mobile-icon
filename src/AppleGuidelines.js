@@ -3,7 +3,7 @@ import Row from 'react-bootstrap/Row'
 
 export default function AppleGuidelines(props) {
   return (
-    <Row className="text">
+    <Row>
       <Col>
         <h2>iOS guidelines</h2>
 

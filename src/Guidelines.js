@@ -7,7 +7,7 @@ import APIService from './APIService'
 
 function Instructions() {
   return (
-    <Row className="text">
+    <Row>
       <Col>
         <h2>General guidelines</h2>
 
@@ -27,7 +27,7 @@ function Instructions() {
 
 function Description() {
   return (
-    <Row className="text">
+    <Row>
       <Col>
         <p>The image that you upload should follow the following guidelines:</p>
 

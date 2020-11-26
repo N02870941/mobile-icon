@@ -64,7 +64,7 @@ export default class Form extends React.Component {
 
   render() {
     return (
-      <Row className='text'>
+      <Row>
         <Col>
 
           <form id="form">
