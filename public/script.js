@@ -3,9 +3,11 @@ $(document).ready(() => {
   const UPLOAD_API_URL = `${BASE_API_URL}/upload`
   const SCALES_API_URL = `${BASE_API_URL}/scales`
 
-  function buildiOSTable(data) {
+  const spinnerElement = document.getElementById('spinner')
+
+  function showTables(scales) {
     $('#ios-table').append(
-      data.map(pair => {
+      scales.ios.map(pair => {
         const pixels = pair.width * pair.scale
 
         return `
@@ -17,11 +19,9 @@ $(document).ready(() => {
         `
       })
     )
-  }
 
-  function buildAndroidTable(data) {
     $('#android-table').append(
-      data.map(pair => {
+      scales.android.map(pair => {
         return `
           <tr>
             <td>${pair.dpi}</td>
@@ -30,83 +30,47 @@ $(document).ready(() => {
         `
       })
     )
-  }
-
-  function showTables(json) {
-    buildiOSTable(json.ios)
-    buildAndroidTable(json.android)
 
     document.getElementById('scales-info').style.display = 'block'
   }
 
-  function showModal() {
-    $("#modal").modal()
+  function parseResponse(response) {
+    if (!response.ok) { throw response }
+    return response.blob()
   }
 
-  function showSpinner() {
-    document.getElementById('spinner').style.display = 'block'
-  }
-
-  function hideSpinner() {
-    document.getElementById('spinner').style.display = 'none'
-  }
-
-  // Manual XHR override that intercepts response and choses to interpret response as
-  // a blob (file) if it succeeds or as text if it fails
-  function onXHR() {
-    let xhr = new XMLHttpRequest()
-
-    xhr.onreadystatechange = function() {
-        if (xhr.readyState == 2) {
-            if(xhr.status == 200) {
-                xhr.responseType = "blob";
-            } else {
-                xhr.responseType = "text";
-            }
-        }
-    }
-
-    return xhr
-  }
-
-  function onSuccess(blob) {
+  function downloadZip(blob) {
+    // https://stackoverflow.com/questions/10529476/javascript-window-url-is-undefined-in-function
     const url     = window.URL || window.webkitURL
     const link    = document.createElement('a')
     link.href     = url.createObjectURL(blob)
-    link.download = 'icon.zip'
+    link.download = 'icons.zip'
 
     document.body.appendChild(link)
     link.click()
   }
 
-  function onError(xhr, status, error) {
-    const title   = document.getElementById('error-title')
-    const message = document.getElementById('error-msg')
-    const url     = document.getElementById('error-url')
-    const res     = JSON.parse(xhr.responseText)
+  function showErrorModal(response) {
+    response.json().then(json => {
+      const title   = document.getElementById('error-title')
+      const message = document.getElementById('error-msg')
 
-    title.innerHTML   = res.title
-    message.innerHTML = res.message
+      title.innerHTML   = json.title
+      message.innerHTML = json.message
 
-    if (res.url) {
-      url.href = res.url
-      url.setAttribute('target', '_blank')
-      url.style.display = 'inline'
-    }
-
-    showModal()
+      $("#modal").modal()
+    })
   }
 
-  function onComplete() {
+  function resetForm() {
     const form = $("#form")
 
     form.trigger('reset')
     form.trigger('change')
-    hideSpinner()
+    spinnerElement.style.display = 'none'
   }
 
   function configureForm() {
-    // Listener for enabling or disabling upload button
     $('#form').on('keyup change paste', () => {
       const file   = document.getElementById('file')
       const submit = document.getElementById('submit-button')
@@ -114,31 +78,17 @@ $(document).ready(() => {
       submit.disabled = file.files.length < 1
     })
 
-    // https://stackoverflow.com/questions/34586671/download-pdf-file-using-jquery-ajax
-    // https://stackoverflow.com/questions/10899384/uploading-both-data-and-files-in-one-form-using-ajax
-    // https://stackoverflow.com/questions/10529476/javascript-window-url-is-undefined-in-function
-    // https://stackoverflow.com/questions/17657184/using-jquerys-ajax-method-to-retrieve-images-as-a-blob
-
     $('#form').submit(function(event) {
       event.preventDefault()
-      showSpinner()
+      spinnerElement.style.display = 'block'
 
       const data = new FormData(this)
 
-      $.ajax({
-        type: 'POST',
-        url: UPLOAD_API_URL,
-        enctype: "multipart/form-data",
-        data: data,
-        xhrFields: { responseType: 'blob' },
-        xhr: onXHR,
-        success: onSuccess,
-        error: onError,
-        complete: onComplete,
-        cached: false,
-        contentType: false,
-        processData: false
-      })
+      fetch(UPLOAD_API_URL, { body: data, method: "post" })
+      .then(parseResponse)
+      .then(downloadZip)
+      .catch(showErrorModal)
+      .finally(resetForm)
     })
   }
 
