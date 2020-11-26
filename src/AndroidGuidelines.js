@@ -1,40 +1,66 @@
 import Col from 'react-bootstrap/Col'
 import Row from 'react-bootstrap/Row'
+import Strings from './Strings'
+
+function Description() {
+  return (
+    <div>
+      <h2>{Strings.guidelines.android.title}</h2>
+      {
+        Strings.guidelines.android.paragraphs.map((text, index) => {
+          return <p key={index}>{text}</p>
+        })
+      }
+    </div>
+  )
+}
+
+function TableHead() {
+  return (
+    <thead>
+      <tr>
+        {
+          Strings.guidelines.android.table.columns.map((name, index) => {
+            return <th key={index} scope="col">{name}</th>
+          })
+        }
+      </tr>
+    </thead>
+  )
+}
+
+function TableBody(props) {
+  return (
+    <tbody>
+      {
+        props.scales.map((pair, index) => {
+          return (
+            <tr key={index}>
+              <td>{pair.dpi}</td>
+              <td>{pair.width}x{pair.width}</td>
+            </tr>
+          )
+        })
+      }
+    </tbody>
+  )
+}
+
+function Table(props) {
+  return (
+    <table className="table table-sm">
+      <TableHead />
+      <TableBody scales={props.scales} />
+    </table>
+  )
+}
 
 export default function AndroidGuidelines(props) {
   return (
     <Row>
       <Col>
-        <h2>Android guidelines</h2>
-
-        <p>
-          Android works a little different from iOS. Android will be expecting all assets (independent of size)
-          to have the exact same name. Different asset sizes will be seperated by <strong>folder</strong> where the
-          name of the folder indicates the size of the asset. For example, if an asset is named icon.png, for devices
-          that fall under the xxxhdpi category, we will expect the 192x192 version of icon.png to be in the xxhdpi/
-          directory.
-        </p>
-
-        <table id='android-table' className="table table-sm">
-          <thead>
-            <tr>
-              <th scope="col">Size</th>
-              <th scope="col">Resolution</th>
-            </tr>
-          </thead>
-          <tbody>
-            {
-              props.scales.map((pair, index) => {
-                return (
-                  <tr key={index}>
-                    <td>{pair.dpi}</td>
-                    <td>{pair.width}x{pair.width}</td>
-                  </tr>
-                )
-              })
-            }
-          </tbody>
-        </table>
+        <Description />
+        <Table scales={props.scales} />
       </Col>
     </Row>
   )

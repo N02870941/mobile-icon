@@ -3,6 +3,7 @@ import Col from 'react-bootstrap/Col'
 import Row from 'react-bootstrap/Row'
 import APIService from './APIService'
 import LoadingSpinner from './LoadingSpinner'
+import Strings from './Strings'
 import $ from 'jquery';
 
 export default class Form extends React.Component {
@@ -84,7 +85,14 @@ export default class Form extends React.Component {
             <LoadingSpinner />
 
             <div className="form-group">
-              <button id="submit-button" type="submit" className="btn btn-primary" disabled>Upload</button>
+              <button
+                id="submit-button"
+                type="submit"
+                className="btn btn-primary"
+                disabled
+              >
+                {Strings.form.button.text}
+              </button>
             </div>
           </form>
         </Col>

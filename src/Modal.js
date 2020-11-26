@@ -1,3 +1,5 @@
+import Strings from './Strings'
+
 // https://www.w3schools.com/bootstrap4/bootstrap_modal.asp
 export default function Modal() {
   return (
@@ -15,7 +17,13 @@ export default function Modal() {
           </div>
 
           <div className="modal-footer">
-            <button type="button" className="btn btn-danger" data-dismiss="modal">Close</button>
+            <button
+              type="button"
+              className="btn btn-danger"
+              data-dismiss="modal"
+            >
+            {Strings.modal.buttons.close.text}
+            </button>
           </div>
 
         </div>
