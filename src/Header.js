@@ -2,8 +2,8 @@ export default function Header() {
   return (
     <div className="">
 
-      <div class="row text">
-        <div class="col-sm">
+      <div className="row text">
+        <div className="col-sm">
           <h1>Mobile Icon Converter</h1>
         </div>
       </div>

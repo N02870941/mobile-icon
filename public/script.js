@@ -5,34 +5,6 @@ $(document).ready(() => {
   const API_BASE_PATH = "mobile-icon/us-central1/api/v1"
   const API_BASE_URL = `${API_PROTOCOL}://${API_HOST}:${API_PORT}/${API_BASE_PATH}`
   const UPLOAD_API_URL = `${API_BASE_URL}/upload`
-  const SCALES_API_URL = `${API_BASE_URL}/scales`
-
-  function showTables(scales) {
-    $('#ios-table').append(
-      scales.ios.map(pair => {
-        return `
-          <tr>
-            <td>${pair.width}x${pair.width}</td>
-            <td>${pair.scale}</td>
-            <td>${pair.resolution.width}x${pair.resolution.height}</td>
-          </tr>
-        `
-      })
-    )
-
-    $('#android-table').append(
-      scales.android.map(pair => {
-        return `
-          <tr>
-            <td>${pair.dpi}</td>
-            <td>${pair.width}x${pair.width}</td>
-          </tr>
-        `
-      })
-    )
-
-    document.getElementById('scales-info').style.display = 'block'
-  }
 
   function parseResponse(response) {
     if (!response.ok) { throw response }
@@ -92,12 +64,5 @@ $(document).ready(() => {
     })
   }
 
-  function loadScales() {
-    fetch(SCALES_API_URL)
-    .then(response => response.json())
-    .then(showTables)
-  }
-
-  loadScales()
   configureForm()
 })

@@ -35,7 +35,13 @@ const scales = {
     { width: 48, dpi: "mdpi" },
     { width: 36, dpi: "ldpi" },
     { width: 512, dpi: "market" },
-  ]
+  ].map(scale => {
+    return {
+      width: scale.width,
+      height: scale.width,
+      dpi: scale.dpi,
+    }
+  })
 }
 
 module.exports = (req, res, next) => {

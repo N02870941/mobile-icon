@@ -1,9 +1,7 @@
 import Header from './Header'
 import Instructions from './Instructions'
 import Form from './Form'
-import GeneralGuidelines from './GeneralGuidelines'
-import AppleGuidelines from './AppleGuidelines'
-import AndroidGuidelines from './AndroidGuidelines'
+import Guidelines from './Guidelines'
 import Footer from './Footer'
 import Modal from './Modal'
 
@@ -13,9 +11,7 @@ export default function App() {
       <Header />
       <Form />
       <Instructions />
-      <GeneralGuidelines />
-      <AppleGuidelines />
-      <AndroidGuidelines />
+      <Guidelines />
       <Footer />
       <Modal />
     </div>

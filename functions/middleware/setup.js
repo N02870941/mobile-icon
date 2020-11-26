@@ -23,6 +23,7 @@ function get_android_resize_operations(images, scales, root) {
         out_file: `${root}/${image.originalname}/android/${scale.dpi}/${image.originalname}`,
         in_file: image.path,
         width: scale.width,
+        height: scale.height,
       }
     })
   })

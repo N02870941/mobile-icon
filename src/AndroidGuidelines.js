@@ -1,4 +1,4 @@
-export default function AndroidGuidelines() {
+export default function AndroidGuidelines(props) {
   return (
     <div className="row text">
       <div className="col">
@@ -12,13 +12,25 @@ export default function AndroidGuidelines() {
           directory.
         </p>
 
-        <table id='android-table' class="table table-sm">
+        <table id='android-table' className="table table-sm">
           <thead>
             <tr>
               <th scope="col">Size</th>
               <th scope="col">Resolution</th>
             </tr>
           </thead>
+          <tbody>
+            {
+              props.scales.map((pair, index) => {
+                return (
+                  <tr key={index}>
+                    <td>{pair.dpi}</td>
+                    <td>{pair.width}x{pair.width}</td>
+                  </tr>
+                )
+              })
+            }
+          </tbody>
         </table>
       </div>
     </div>

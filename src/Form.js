@@ -1,30 +1,28 @@
+import LoadingSpinner from './LoadingSpinner'
+
 export default function Form() {
   return (
-    <div class='row text'>
-      <div class="col-sm">
+    <div className='row text'>
+      <div className="col-sm">
 
         <form id="form">
-          <div class="form-group">
-            <label class="form-element">
+          <div className="form-group">
+            <label className="form-element">
               <input
                 id="file"
                 type="file"
                 name="image"
                 accept="image/*"
                 multiple
-                class="btn btn-outline-info"
+                className="btn btn-outline-info"
               ></input>
             </label>
           </div>
 
-          <div id="spinner" class='form-group initially-hidden'>
-            <div class="la-ball-clip-rotate">
-              <div></div>
-            </div>
-          </div>
+          <LoadingSpinner />
 
-          <div class="form-group">
-            <button id="submit-button" type="submit" class="btn btn-primary" disabled>Upload</button>
+          <div className="form-group">
+            <button id="submit-button" type="submit" className="btn btn-primary" disabled>Upload</button>
           </div>
         </form>
       </div>
