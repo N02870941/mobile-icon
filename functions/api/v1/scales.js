@@ -1,7 +1,5 @@
-module.exports = (() => {
-  const router = require('express').Router()
+const router = require('express').Router()
 
-  router.get('/scales', (req, res) =>  res.json(req.scales))
+router.get('/scales', (req, res) =>  res.json(req.scales))
 
-  return router
-})()
+module.exports = router

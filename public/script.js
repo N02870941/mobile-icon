@@ -1,92 +1,42 @@
-$(document).ready(function() {
-  // Draw tables that show icon resolutions
-  fetch('http://localhost:5001/mobile-icon/us-central1/api/v1/scales')
-  .then(response => response.json())
-  .then(showTables)
+$(document).ready(() => {
+  const BASE_API_URL = "http://localhost:5001/mobile-icon/us-central1/api/v1"
+  const UPLOAD_API_URL = `${BASE_API_URL}/upload`
+  const SCALES_API_URL = `${BASE_API_URL}/scales`
 
-  // Listener for enabling or disabling upload button
-  $('#form').on('keyup change paste', function() {
-    const file   = document.getElementById('file')
-    const submit = document.getElementById('submit-button')
-
-    submit.disabled = file.files.length < 1
-  })
-
-  // https://stackoverflow.com/questions/34586671/download-pdf-file-using-jquery-ajax
-  // https://stackoverflow.com/questions/10899384/uploading-both-data-and-files-in-one-form-using-ajax
-  // https://stackoverflow.com/questions/10529476/javascript-window-url-is-undefined-in-function
-  // https://stackoverflow.com/questions/17657184/using-jquerys-ajax-method-to-retrieve-images-as-a-blob
-
-  // Prevent default submit and manually submit the form
-  // with overridden XHR function.
-  $('#form').submit(function(event) {
-    event.preventDefault()
-    showSpinner()
-
-    const data = new FormData(this)
-
-    $.ajax({
-      type: 'POST',
-      url: 'http://localhost:5001/mobile-icon/us-central1/api/v1/upload',
-      enctype: "multipart/form-data",
-      data: data,
-      xhrFields: {
-        responseType: 'blob'
-      },
-      xhr: onXHR,
-      success: onSuccess,
-      error: onError,
-      complete: onComplete,
-      cached: false,
-      contentType: false,
-      processData: false
-    })
-  })
-
-  // Build table of iOS resolutions
   function buildiOSTable(data) {
-    let iosHTML = ''
+    $('#ios-table').append(
+      data.map(pair => {
+        const pixels = pair.width * pair.scale
 
-    data.forEach(pair => {
-      const width = pair.width
-      const scale = pair.scale
-      const pixels = width * scale
-
-      iosHTML += `
-        <tr>
-          <td>${width}x${width}</td>
-          <td>${scale}</td>
-          <td>${pixels}x${pixels}</td>
-        </tr>
-      `
-    })
-
-    $('#ios-table').append(iosHTML)
+        return `
+          <tr>
+            <td>${pair.width}x${pair.width}</td>
+            <td>${pair.scale}</td>
+            <td>${pixels}x${pixels}</td>
+          </tr>
+        `
+      })
+    )
   }
 
-  // Build table of Android resolutions
   function buildAndroidTable(data) {
-    let andHTML = ''
-
-    data.forEach(pair => {
-      andHTML += `
-        <tr>
-          <td>${pair.dpi}</td>
-          <td>${pair.width}x${pair.width}</td>
-        </tr>
-      `
-    })
-
-    $('#android-table').append(andHTML)
+    $('#android-table').append(
+      data.map(pair => {
+        return `
+          <tr>
+            <td>${pair.dpi}</td>
+            <td>${pair.width}x${pair.width}</td>
+          </tr>
+        `
+      })
+    )
   }
 
   function showTables(json) {
     buildiOSTable(json.ios)
     buildAndroidTable(json.android)
 
-    document.getElementById('scales-info-div')
-            .style
-            .display = 'block'
+    document.getElementById('scales-info').style.display = 'block'
   }
 
   function showModal() {
@@ -94,13 +44,11 @@ $(document).ready(function() {
   }
 
   function showSpinner() {
-    const spinner = document.getElementById('spinner')
-    spinner.style.display = 'block'
+    document.getElementById('spinner').style.display = 'block'
   }
 
   function hideSpinner() {
-    const spinner = document.getElementById('spinner')
-    spinner.style.display = 'none'
+    document.getElementById('spinner').style.display = 'none'
   }
 
   // Manual XHR override that intercepts response and choses to interpret response as
@@ -121,7 +69,6 @@ $(document).ready(function() {
     return xhr
   }
 
-  // Callback after form submission succeeds
   function onSuccess(blob) {
     const url     = window.URL || window.webkitURL
     const link    = document.createElement('a')
@@ -132,7 +79,6 @@ $(document).ready(function() {
     link.click()
   }
 
-  // Callback after form submission fails
   function onError(xhr, status, error) {
     const title   = document.getElementById('error-title')
     const message = document.getElementById('error-msg')
@@ -151,7 +97,6 @@ $(document).ready(function() {
     showModal()
   }
 
-  // Callback after form submission is complete. Executes whether submit succeeds or fails.
   function onComplete() {
     const form = $("#form")
 
@@ -159,4 +104,50 @@ $(document).ready(function() {
     form.trigger('change')
     hideSpinner()
   }
+
+  function configureForm() {
+    // Listener for enabling or disabling upload button
+    $('#form').on('keyup change paste', () => {
+      const file   = document.getElementById('file')
+      const submit = document.getElementById('submit-button')
+
+      submit.disabled = file.files.length < 1
+    })
+
+    // https://stackoverflow.com/questions/34586671/download-pdf-file-using-jquery-ajax
+    // https://stackoverflow.com/questions/10899384/uploading-both-data-and-files-in-one-form-using-ajax
+    // https://stackoverflow.com/questions/10529476/javascript-window-url-is-undefined-in-function
+    // https://stackoverflow.com/questions/17657184/using-jquerys-ajax-method-to-retrieve-images-as-a-blob
+
+    $('#form').submit(function(event) {
+      event.preventDefault()
+      showSpinner()
+
+      const data = new FormData(this)
+
+      $.ajax({
+        type: 'POST',
+        url: UPLOAD_API_URL,
+        enctype: "multipart/form-data",
+        data: data,
+        xhrFields: { responseType: 'blob' },
+        xhr: onXHR,
+        success: onSuccess,
+        error: onError,
+        complete: onComplete,
+        cached: false,
+        contentType: false,
+        processData: false
+      })
+    })
+  }
+
+  function loadScales() {
+    fetch(SCALES_API_URL)
+    .then(response => response.json())
+    .then(showTables)
+  }
+
+  loadScales()
+  configureForm()
 })
