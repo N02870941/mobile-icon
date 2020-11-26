@@ -7,7 +7,8 @@ function get_ios_resize_operations(images, scales, root) {
         directory: `${root}/${image.originalname}/ios`,
         out_file: `${root}/${image.originalname}/ios/${image.originalname}-${scale.width}@${scale.scale}.${image.extension}`,
         in_file: image.path,
-        width: scale.width * scale.scale,
+        width: scale.resolution.width,
+        height: scale.resolution.height,
       }
     })
   })

@@ -1,20 +1,20 @@
 $(document).ready(() => {
-  const BASE_API_URL = "http://localhost:5001/mobile-icon/us-central1/api/v1"
-  const UPLOAD_API_URL = `${BASE_API_URL}/upload`
-  const SCALES_API_URL = `${BASE_API_URL}/scales`
-
-  const spinnerElement = document.getElementById('spinner')
+  const API_PROTOCOL = "http"
+  const API_HOST = "localhost"
+  const API_PORT = "5001"
+  const API_BASE_PATH = "mobile-icon/us-central1/api/v1"
+  const API_BASE_URL = `${API_PROTOCOL}://${API_HOST}:${API_PORT}/${API_BASE_PATH}`
+  const UPLOAD_API_URL = `${API_BASE_URL}/upload`
+  const SCALES_API_URL = `${API_BASE_URL}/scales`
 
   function showTables(scales) {
     $('#ios-table').append(
       scales.ios.map(pair => {
-        const pixels = pair.width * pair.scale
-
         return `
           <tr>
             <td>${pair.width}x${pair.width}</td>
             <td>${pair.scale}</td>
-            <td>${pixels}x${pixels}</td>
+            <td>${pair.resolution.width}x${pair.resolution.height}</td>
           </tr>
         `
       })
@@ -55,8 +55,8 @@ $(document).ready(() => {
       const title   = document.getElementById('error-title')
       const message = document.getElementById('error-msg')
 
-      title.innerHTML   = json.title
-      message.innerHTML = json.message
+      title.innerHTML   = json.title || "Oops"
+      message.innerHTML = json.message || "An error occured"
 
       $("#modal").modal()
     })
@@ -67,7 +67,7 @@ $(document).ready(() => {
 
     form.trigger('reset')
     form.trigger('change')
-    spinnerElement.style.display = 'none'
+    document.getElementById('spinner').style.display = 'none'
   }
 
   function configureForm() {
@@ -80,7 +80,7 @@ $(document).ready(() => {
 
     $('#form').submit(function(event) {
       event.preventDefault()
-      spinnerElement.style.display = 'block'
+      document.getElementById('spinner').style.display = 'block'
 
       const data = new FormData(this)
 

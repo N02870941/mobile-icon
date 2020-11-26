@@ -14,14 +14,18 @@ async function cp(operations) {
 async function resize(operations) {
   return Promise.all(operations.map(operation => {
     return sharp(operation.in_file)
-    .resize(operation.width, operation.width)
+    .resize(operation.width, operation.height)
     .toFile(operation.out_file)
   }))
 }
 
 module.exports = async (req, res, next) => {
-  await mkdir(req.operations.mkdir)
-  await cp(req.operations.cp)
-  await resize(req.operations.resize)
-  next()
+  try {
+    await mkdir(req.operations.mkdir)
+    await cp(req.operations.cp)
+    await resize(req.operations.resize)
+    next()
+  } catch (error) {
+    next(error)
+  }
 }
