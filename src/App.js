@@ -1,5 +1,4 @@
 import Header from './Header'
-import Instructions from './Instructions'
 import Form from './Form'
 import Guidelines from './Guidelines'
 import Footer from './Footer'
@@ -10,7 +9,6 @@ export default function App() {
     <div className="container">
       <Header />
       <Form />
-      <Instructions />
       <Guidelines />
       <Footer />
       <Modal />

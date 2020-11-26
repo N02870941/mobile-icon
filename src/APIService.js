@@ -11,4 +11,12 @@ export default class APIService {
     return fetch(SCALES_API_URL)
     .then(response => response.json())
   }
+
+  static upload(formData) {
+    return fetch(UPLOAD_API_URL, { body: formData, method: "post" })
+    .then(response => {
+      if (!response.ok) { throw response }
+      return response.blob()
+    })
+  }
 }
