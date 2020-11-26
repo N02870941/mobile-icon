@@ -1,7 +1,10 @@
+import Col from 'react-bootstrap/Col'
+import Row from 'react-bootstrap/Row'
+
 export default function AppleGuidelines(props) {
   return (
-    <div className="row text">
-      <div className="col">
+    <Row className="text">
+      <Col>
         <h2>iOS guidelines</h2>
 
         <p>
@@ -33,7 +36,7 @@ export default function AppleGuidelines(props) {
         </table>
 
         <p>If you would like more information on iOS icons, see the <a target="_blank" href="https://developer.apple.com/design/human-interface-guidelines/ios/icons-and-images/app-icon/">iOS Human Interface Guidelines.</a></p>
-      </div>
-    </div>
+      </Col>
+    </Row>
   )
 }

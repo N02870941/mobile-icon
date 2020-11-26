@@ -1,12 +1,14 @@
 import React from 'react'
+import Col from 'react-bootstrap/Col'
+import Row from 'react-bootstrap/Row'
 import AppleGuidelines from './AppleGuidelines'
 import AndroidGuidelines from './AndroidGuidelines'
 import APIService from './APIService'
 
 function Instructions() {
   return (
-    <div className="row text">
-      <div className="col">
+    <Row className="text">
+      <Col>
         <h2>General guidelines</h2>
 
         <p>
@@ -18,23 +20,23 @@ function Instructions() {
           After you have downloaded your assets, unzip it, and copy the icons into your app directory and your app
           will be looking great on all screens in no time!
         </p>
-      </div>
-    </div>
+      </Col>
+    </Row>
   )
 }
 
 function Description() {
   return (
-    <div className="row text">
-      <div className="col">
+    <Row className="text">
+      <Col>
         <p>The image that you upload should follow the following guidelines:</p>
 
         <ul>
           <li>File size no greater than 2mb (for now)</li>
           <li>Image should be square (width is equal to height)</li>
         </ul>
-      </div>
-    </div>
+      </Col>
+    </Row>
   )
 }
 

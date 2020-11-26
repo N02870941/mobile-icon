@@ -1,7 +1,10 @@
+import Col from 'react-bootstrap/Col'
+import Row from 'react-bootstrap/Row'
+
 export default function AndroidGuidelines(props) {
   return (
-    <div className="row text">
-      <div className="col">
+    <Row className="text">
+      <Col>
         <h2>Android guidelines</h2>
 
         <p>
@@ -32,7 +35,7 @@ export default function AndroidGuidelines(props) {
             }
           </tbody>
         </table>
-      </div>
-    </div>
+      </Col>
+    </Row>
   )
 }

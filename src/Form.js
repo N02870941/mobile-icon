@@ -1,4 +1,6 @@
 import React from 'react'
+import Col from 'react-bootstrap/Col'
+import Row from 'react-bootstrap/Row'
 import APIService from './APIService'
 import LoadingSpinner from './LoadingSpinner'
 import $ from 'jquery';
@@ -62,8 +64,8 @@ export default class Form extends React.Component {
 
   render() {
     return (
-      <div className='row text'>
-        <div className="col-sm">
+      <Row className='text'>
+        <Col>
 
           <form id="form">
             <div className="form-group">
@@ -85,8 +87,8 @@ export default class Form extends React.Component {
               <button id="submit-button" type="submit" className="btn btn-primary" disabled>Upload</button>
             </div>
           </form>
-        </div>
-      </div>
+        </Col>
+      </Row>
     )
   }
 }
