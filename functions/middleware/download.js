@@ -26,4 +26,5 @@ module.exports = (req, res, next) => {
   })
 
   res.download(req.download.zip, next)
+  // res.status(500).json({})
 }
