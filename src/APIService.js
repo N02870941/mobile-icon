@@ -1,4 +1,4 @@
-const API_BASE_URL = `${(process.env.REACT_API_BASE_URL || "http://localhost:8080")}/v1`
+const API_BASE_URL = `${(process.env.REACT_APP_API_BASE_URL || "http://localhost:8080")}/v1`
 const UPLOAD_API_URL = `${API_BASE_URL}/upload`
 const SCALES_API_URL = `${API_BASE_URL}/scales`
 
