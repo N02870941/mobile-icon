@@ -1,8 +1,4 @@
-const API_PROTOCOL = "http"
-const API_HOST = "localhost"
-const API_PORT = "5001"
-const API_BASE_PATH = "mobile-icon/us-central1/api/v1"
-const API_BASE_URL = `${API_PROTOCOL}://${API_HOST}:${API_PORT}/${API_BASE_PATH}`
+const API_BASE_URL = `${(process.env.REACT_API_BASE_URL || "http://localhost:8080")}/v1`
 const UPLOAD_API_URL = `${API_BASE_URL}/upload`
 const SCALES_API_URL = `${API_BASE_URL}/scales`
 
@@ -15,8 +11,18 @@ export default class APIService {
   static upload(formData) {
     return fetch(UPLOAD_API_URL, { body: formData, method: "post" })
     .then(response => {
-      if (!response.ok) { throw response }
+      if (!response.ok) {
+        throw response.json()
+      }
       return response.blob()
+    })
+    .catch(error => {
+      console.error(error)
+
+      throw new Error({
+        title: "Oops",
+        message: "Something went wrong"
+      })
     })
   }
 }

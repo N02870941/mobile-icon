@@ -13,20 +13,23 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@main
 
-      - name: Install Function Dependencies
-        working-directory: ./functions
-        run: |
-          npm install
-          rm -rf node_modules/sharp
-          npm install --arch=x64 --platform=linux --build-from-source sharp
+      - name: Generate .env
+        run: echo "REACT_API_BASE_URL=${REACT_API_BASE_URL}" > .env
+        env:
+          REACT_API_BASE_URL: ${{ secrets.REACT_API_BASE_URL }}
 
-      # - name: Test Functions
+      - name: Install Hosting Dependencies
+        run: npm install
+
+      # - name: Test Hosting
       #   run: npm test
-      #   working-directory: ./functions
+
+      - name: Build Hosting Artifact
+        run: npm run build
 
       - name: Deploy to Firebase
         uses: w9jds/firebase-action@master
         with:
-          args: deploy -m $GITHUB_SHA
+          args: deploy --only hosting -m $GITHUB_SHA
         env:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}

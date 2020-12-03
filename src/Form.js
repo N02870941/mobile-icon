@@ -19,16 +19,16 @@ export default class Form extends React.Component {
       link.click()
     }
 
-    function showErrorModal(response) {
-      response.json().then(json => {
-        const title   = document.getElementById('error-title')
-        const message = document.getElementById('error-msg')
+    function showErrorModal(json) {
+      // const title   = document.getElementById('error-title')
+      // const message = document.getElementById('error-msg')
+      //
+      // title.innerHTML   = "Oops"
+      // message.innerHTML = "An error occured"
+      //
+      // $("#modal").modal()
 
-        title.innerHTML   = json.title || "Oops"
-        message.innerHTML = json.message || "An error occured"
-
-        $("#modal").modal()
-      })
+      alert("Oops, an error occured")
     }
 
     function resetForm() {
@@ -74,7 +74,7 @@ export default class Form extends React.Component {
                 <input
                   id="file"
                   type="file"
-                  name="image"
+                  name="images"
                   accept="image/*"
                   multiple
                   className="btn btn-outline-info"

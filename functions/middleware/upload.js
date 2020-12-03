@@ -15,6 +15,7 @@ const storage = multer.diskStorage({
       return callback(message, null)
     }
 
+    // TODO - use some uuid to prevent against overwriting files from concurrent requests
     const filename = `${Date.now()}-${file.originalname}`
     callback(null, filename)
   }
