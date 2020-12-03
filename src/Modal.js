@@ -8,7 +8,7 @@ export default function Modal() {
         <div className="modal-content">
 
           <div className="modal-header">
-            <h4 id="error-title" className="modal-title"></h4>
+            <h4 id="error-title" className="modal-title">Title</h4>
             <button type="button" className="close" data-dismiss="modal">&times;</button>
           </div>
 

@@ -1,4 +1,4 @@
-export default {
+const Strings = {
   header: {
     title: "Mobile Icon Converter",
     paragraphs: [
@@ -93,3 +93,5 @@ export default {
     }
   },
 }
+
+export default Strings
