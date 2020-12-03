@@ -1,72 +1,25 @@
-const Busboy = require('busboy');
-const os = require('os');
-const path = require('path');
-const fs = require('fs');
+const util = require("util")
+const multer = require("multer")
+const os = require("os")
 
-const FILE_SIZE_LIMIT = 10 * 1024 * 1024
+// https://bezkoder.com/node-js-upload-multiple-files/
+const storage = multer.diskStorage({
+  destination: (req, file, callback) => {
+    callback(null, os.tmpdir())
+  },
+  filename: (req, file, callback) => {
+    const match = ["image/png", "image/jpeg"]
 
-// https://mikesukmanowsky.com/firebase-file-and-image-uploads/
-// https://cloud.google.com/functions/docs/writing/http#multipart_data
+    if (match.indexOf(file.mimetype) === -1) {
+      const message = `${file.originalname} is invalid. Only accept png/jpeg.`
+      return callback(message, null)
+    }
 
-function getBusBoy(headers) {
-  return new Busboy({
-    headers: headers,
-    limits: { fileSize: FILE_SIZE_LIMIT }
-  })
-}
+    const filename = `${Date.now()}-${file.originalname}`
+    callback(null, filename)
+  }
+})
 
-module.exports = (req, res, next) => {
-  const busboy = getBusBoy(req.headers)
-  const fields = {}
-  const files = []
-  const fileWrites = []
-  const tmpdir = os.tmpdir()
+const uploadFiles = multer({ storage: storage }).array("images", 10)
 
-  busboy.on('field', (key, value) => fields[key] = value)
-
-  busboy.on('file', (fieldname, file, filename, encoding, mimetype) => {
-
-    // TODO - validate mimetype
-
-    const filepath = path.join(tmpdir, filename)
-    const writeStream = fs.createWriteStream(filepath)
-
-    file.pipe(writeStream)
-
-    fileWrites.push(new Promise((resolve, reject) => {
-      file.on('end', () => writeStream.end())
-
-      writeStream.on('finish', () => {
-        fs.readFile(filepath, (err, buffer) => {
-          const size = Buffer.byteLength(buffer)
-
-          if (err) {
-            return reject(err)
-          }
-
-          files.push({
-            directory: tmpdir,
-            originalname: filename,
-            path: filepath,
-            extension: filename.substr(filename.lastIndexOf('.') + 1)
-          })
-
-          resolve()
-        })
-      })
-
-      writeStream.on('error', reject)
-    }))
-  })
-
-  busboy.on('finish', () => {
-    Promise.all(fileWrites).then(() => {
-      req.body = fields
-      req.files = files
-      next()
-    })
-    .catch(next)
-  });
-
-  busboy.end(req.rawBody)
-}
+module.exports = util.promisify(uploadFiles)

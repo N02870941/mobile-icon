@@ -1,11 +1,12 @@
 const os = require('os')
+const path = require('path')
 
 function get_ios_resize_operations(images, scales, root) {
   return images.map(image => {
     return scales.map(scale => {
       return {
         directory: `${root}/${image.originalname}/ios`,
-        out_file: `${root}/${image.originalname}/ios/${image.originalname}-${scale.width}@${scale.scale}.${image.extension}`,
+        out_file: `${root}/${image.originalname}/ios/${image.originalname}-${scale.width}@${scale.scale}${path.extname(image.originalname)}`,
         in_file: image.path,
         width: scale.resolution.width,
         height: scale.resolution.height,
